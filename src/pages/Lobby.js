@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function Lobby() {
   return (
-    <div>
-      <div>
+    <div className="lobby">
+      <div className="start">
         <label for="role">I will first be a </label>
         <select name="role" id="role">
           <option value="">--Please choose an option--</option>
@@ -17,7 +17,7 @@ export default function Lobby() {
         <button>Go enter the room</button>
       </div>
 
-      <div>
+      <div className="join">
         Enter the existing game room id
         <span>Error: Room is already full.</span>
         <p>
@@ -26,7 +26,7 @@ export default function Lobby() {
         <button>Go enter the room</button>
       </div>
 
-      <h1>Mastermind</h1>
+      <h1 className="logo">Mastermind</h1>
     </div>
   );
 }

@@ -50,3 +50,24 @@
   width: 50%;
   height: 100%;
 }
+
+.lobby {
+  background: black;
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  display: flex;
+  padding: 50px;
+}
+
+.logo {
+  font-size: 150px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.start,
+.join {
+  width: 50%;
+}
