@@ -1,9 +1,12 @@
 import React from 'react';
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
-import {firestore, auth} from './services/firebase';
+import {auth} from './services/firebase';
 import Authentication from './components/Authentification';
 import {useEffect} from 'react';
 import {useState} from 'react';
+import Game from './pages/Game';
+import Lobby from './pages/Lobby';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -11,15 +14,24 @@ function App() {
   useEffect(() => {
     const unsubscribeFromAuth = async () =>
       await auth.onAuthStateChanged(user => {
-        console.log('user', user);
         setUser(user);
       });
     unsubscribeFromAuth();
   });
+
   return (
-    <div className="App">
-      <h1>Mastermind</h1>
+    <div>
       <Authentication user={user} />
+      <Router>
+        <Switch>
+          <Route path="/lobby">
+            <Lobby />
+          </Route>
+          <Route path="/game">
+            <Game />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }
