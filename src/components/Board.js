@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {GameConfig} from '../game/config';
+import {GameConfig} from '../shared/config';
 
 function Row() {
   return (
-    <div>
+    <div className="row">
       {[...Array(GameConfig.guessSpotCount).keys()].map((_val, index) => (
         <Guess key={index} />
       ))}
@@ -19,7 +19,7 @@ function Row() {
 
 function Code() {
   return (
-    <div>
+    <div className="code">
       {[...Array(GameConfig.guessSpotCount).keys()].map((_val, index) => (
         <Guess key={index} />
       ))}
@@ -28,16 +28,16 @@ function Code() {
 }
 
 function Guess() {
-  return <div>guess</div>;
+  return <div className="guess">guess</div>;
 }
 
 function Clue() {
-  return <div>clue</div>;
+  return <div className="clue">clue</div>;
 }
 
 export default function Board() {
   return (
-    <div>
+    <div className="board">
       {[...Array(GameConfig.rowCount).keys()].map((_val, index) => (
         <Row key={index} />
       ))}

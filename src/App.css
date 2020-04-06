@@ -1,0 +1,52 @@
+.game {
+  width: 100%;
+}
+
+.board {
+  padding: 20px;
+  width: 50%;
+  background: beige;
+}
+
+.row {
+  display: flex;
+}
+
+.clue {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.guess {
+  border: 1px solid red;
+  padding: 10px;
+  background: white;
+  border-radius: 50%;
+}
+
+.code {
+  display: flex;
+  border: 1px solid black;
+  padding: 30px;
+}
+
+.chat-box {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.option-box {
+  width: 100%;
+  border: 1px solid black;
+}
+
+.game {
+  display: flex;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+}
