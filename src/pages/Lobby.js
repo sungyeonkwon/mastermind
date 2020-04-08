@@ -4,7 +4,7 @@ export default function Lobby() {
   return (
     <div className="lobby">
       <div className="start">
-        <label for="role">I will first be a </label>
+        <label htmlFor="role">I will first be a </label>
         <select name="role" id="role">
           <option value="">--Please choose an option--</option>
           <option value="codemaker">codemaker</option>
@@ -24,7 +24,7 @@ export default function Lobby() {
         </p>
       </div>
 
-      <a href="/game" >Go enter the room</a>
+      <a href="/game">Go enter the room</a>
       <h1 className="logo">Mastermind</h1>
     </div>
   );
