@@ -14,7 +14,6 @@ export default function Lobby() {
         <p>
           room number: <span>23423</span>
         </p>
-        <button>Go enter the room</button>
       </div>
 
       <div className="join">
@@ -23,9 +22,9 @@ export default function Lobby() {
         <p>
           room number: <input />
         </p>
-        <button>Go enter the room</button>
       </div>
 
+      <a href="/game" >Go enter the room</a>
       <h1 className="logo">Mastermind</h1>
     </div>
   );

@@ -1,14 +1,13 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {useEffect} from 'react';
 import {useState} from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import {auth} from './services/firebase';
 import Authentication from './components/Authentification';
-import Game from './pages/Game';
-import Lobby from './pages/Lobby';
 import {firestore} from './services/firebase';
 import './App.css';
+import {Routes} from './routes/routes';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -26,12 +25,13 @@ function App() {
       <Authentication user={user} />
       <Router>
         <Switch>
-          <Route path="/lobby">
-            <Lobby />
-          </Route>
-          <Route path="/game">
-            <Game />
-          </Route>
+          {Routes.map(({path, exact, component: Component, ...rest}) => (
+            <Route
+              key={path}
+              exact={exact}
+              path={path}
+              render={props => <Component {...props} {...rest} />}></Route>
+          ))}
         </Switch>
       </Router>
     </div>
