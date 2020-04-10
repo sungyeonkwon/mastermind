@@ -36,7 +36,9 @@ function App() {
               key={path}
               exact={exact}
               path={path}
-              render={props => <Component {...props} {...rest} />}></Route>
+              render={props => (
+                <Component {...props} {...rest} user={user} />
+              )}></Route>
           ))}
         </Switch>
       </Router>
