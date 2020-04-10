@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 
 import {firestore} from '../services/firebase';
 import {Narration} from '../shared/constants';
+import {withUser} from '../providers/UserProvider';
 
 export default function Lobby({user}) {
   const [role, setRole] = useState('codemaker');
@@ -85,3 +86,5 @@ export default function Lobby({user}) {
     </div>
   );
 }
+
+export const LobbyWithUser = withUser(Lobby);
