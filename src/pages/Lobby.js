@@ -1,21 +1,43 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 export default function Lobby() {
+  const [role, setRole] = useState('codemaker');
+
+  const handleRoleChange = event => {
+    setRole(event.target.value);
+  };
+
   return (
     <div className="lobby">
       <div className="start">
-        <label htmlFor="role">I will first be a </label>
-        <select name="role" id="role">
-          <option value="">--Please choose an option--</option>
-          <option value="codemaker">codemaker</option>
-          <option value="codebreaker">codebreaker</option>
-        </select>
+        <div>
+          I will first be
+          <input
+            checked={role === 'codemaker'}
+            onChange={handleRoleChange}
+            type="radio"
+            id="codemaker"
+            value="codemaker"
+            name="role"
+          />
+          <label htmlFor="codemaker">codemaker</label>
+        </div>
+        <div>
+          <input
+            checked={role === 'codebreaker'}
+            onChange={handleRoleChange}
+            type="radio"
+            id="codebreaker"
+            value="codebreaker"
+            name="role"
+          />
+          <label htmlFor="codebreaker">codebreaker</label>
+        </div>
         Starting game...
         <p>
           room number: <span>23423</span>
         </p>
       </div>
-
       <div className="join">
         Enter the existing game room id
         <span>Error: Room is already full.</span>
@@ -23,7 +45,6 @@ export default function Lobby() {
           room number: <input />
         </p>
       </div>
-
       <a href="/game">Go enter the room</a>
       <h1 className="logo">Mastermind</h1>
     </div>

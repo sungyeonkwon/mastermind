@@ -4,4 +4,5 @@ export const GameConfig = {
   guessSpotCount: 5,
   rowCount: 12,
   winningPoint: 10,
+  rounds: 2,
 };
