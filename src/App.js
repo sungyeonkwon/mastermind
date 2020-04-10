@@ -5,7 +5,6 @@ import {AuthenticationWithUser} from './components/Authentification';
 import {GameProvider} from './providers/GameProvider';
 import {Routes} from './routes/routes';
 import {UserProvider} from './providers/UserProvider';
-import './App.css';
 
 function App() {
   return (
