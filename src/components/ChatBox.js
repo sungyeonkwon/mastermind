@@ -1,7 +1,22 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
-export default function ChatBox() {
+import {withUser} from '../providers/UserProvider';
+import {withGame} from '../providers/GameProvider';
+import {collectIdsandDocs} from '../shared/utils';
+
+export default function ChatBox({user, gameRef, chatRef}) {
   const [value, setValue] = useState('');
+  const [chatContent, setChatContent] = useState('');
+
+  // Subscribe to the chat doc.
+  useEffect(() => {
+    if (chatRef) {
+      chatRef.onSnapshot(snapshot => {
+        const chatData = collectIdsandDocs(snapshot);
+        setChatContent(chatData.chatContent);
+      });
+    }
+  }, [chatRef, chatContent.length]);
 
   const handleChange = event => {
     setValue(event.target.value);
@@ -9,15 +24,26 @@ export default function ChatBox() {
 
   const handleKeyDown = event => {
     if (event.key === 'Enter') {
-      // TODO: Push to ChatDocument, referenced from RoundDocument.
+      const line = {
+        isNarration: false,
+        message: value,
+        timestamp: new Date(),
+        user: user,
+      };
+      if (chatRef) {
+        chatRef.set({chatContent: [...chatContent, line]});
+        setValue('');
+      }
     }
   };
 
   return (
     <div className="chat-box">
       <div>
-        <p>Chat line 1</p>
-        <p>Chat line 2</p>
+        {chatContent.length &&
+          chatContent.map(({message, timestamp}, index) => (
+            <p key={index}>{message}</p>
+          ))}
       </div>
       <input
         type="text"
@@ -28,3 +54,5 @@ export default function ChatBox() {
     </div>
   );
 }
+
+export const ChatBoxWithGame = withGame(withUser(ChatBox));

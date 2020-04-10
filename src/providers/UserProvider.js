@@ -1,6 +1,7 @@
 import React, {createContext, useEffect, useState} from 'react';
 
 import {auth, createUserDocument} from '../services/firebase';
+import {getDisplayName} from '../shared/utils';
 
 export const UserContext = createContext();
 
@@ -37,7 +38,3 @@ export const withUser = Component => {
 
   return WrappedComponent;
 };
-
-function getDisplayName(WrappedComponent) {
-  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-}
