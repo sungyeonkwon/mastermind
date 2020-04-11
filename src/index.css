@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .game {
   width: 100%;
 }
@@ -42,6 +46,7 @@
 
 .game {
   display: flex;
+  height: 100%;
 }
 
 .control {
