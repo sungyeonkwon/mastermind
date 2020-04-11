@@ -71,3 +71,12 @@
 .join {
   width: 50%;
 }
+
+.error {
+  display: none;
+  color: red;
+}
+
+.error.show {
+  display: block;
+}

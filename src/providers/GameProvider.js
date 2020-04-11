@@ -13,12 +13,12 @@ export function GameProvider({children}) {
   const user = useContext(UserContext);
 
   useEffect(() => {
-    if (gameRef.id) {
+    if (gameRef && gameRef.id) {
       firestore
         .doc(`games/${gameRef.id}`)
         .get()
-        .then(val => {
-          const gameDoc = val.data();
+        .then(gameRef => {
+          const gameDoc = gameRef.data();
           setChatRef(gameDoc.chatRef);
         });
     } else {
@@ -38,7 +38,7 @@ export function GameProvider({children}) {
   }, [gameRef, user.uid]);
 
   return (
-    <GameContext.Provider value={{gameRef, setGameRef, chatRef}}>
+    <GameContext.Provider value={{gameRef, setGameRef, chatRef, setChatRef}}>
       {children}
     </GameContext.Provider>
   );
@@ -47,10 +47,12 @@ export function GameProvider({children}) {
 export const withGame = Component => {
   const WrappedComponent = props => (
     <GameContext.Consumer>
-      {({gameRef, setGameRef, chatRef}) => (
+      {({gameRef, setGameRef, chatRef, setChatRef}) => (
         <Component
           startGame={startGame}
+          joinGame={joinGame}
           setGameRef={setGameRef}
+          setChatRef={setChatRef}
           chatRef={chatRef}
           gameRef={gameRef}
           {...props}
@@ -65,6 +67,26 @@ export const withGame = Component => {
   return WrappedComponent;
 };
 
+async function joinGame(_event, roomId, user, setGameRef, setChatRef) {
+  // TODO: Ensure the user is not the same as player one.
+  // Update gameRef's player Two.
+  if (user) {
+    const gameRef = await firestore.doc(`games/${roomId}`);
+    await gameRef.update({
+      playerTwo: user,
+    });
+
+    // Push the gameRef to the user game array.
+    await firestore.doc(`users/${user.uid}`).update({gameRefArr: [gameRef]});
+
+    // Update gameRef and chatRef.
+    const gameDoc = await gameRef.get();
+    const chatRef = gameDoc.data().chatRef;
+    setGameRef(gameRef);
+    setChatRef(chatRef);
+  }
+}
+
 async function startGame(user, setGameRef, history) {
   // Create a chat document, an array starting with a narration.
   const chat = {
@@ -73,6 +95,7 @@ async function startGame(user, setGameRef, history) {
         isNarration: true,
         message: Narration.startGame,
         timeStamp: new Date(),
+        // TODO: Move the first line of narration to here.
       },
     ],
   };
