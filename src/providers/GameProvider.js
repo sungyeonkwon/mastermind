@@ -1,14 +1,16 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, {createContext, useEffect, useState, useContext} from 'react';
 
 import {firestore} from '../services/firebase';
 import {Narration} from '../shared/constants';
 import {getDisplayName} from '../shared/utils';
+import {UserContext} from './UserProvider';
 
 export const GameContext = createContext();
 
 export function GameProvider({children}) {
   const [gameRef, setGameRef] = useState({id: null});
   const [chatRef, setChatRef] = useState('');
+  const user = useContext(UserContext);
 
   useEffect(() => {
     if (gameRef.id) {
@@ -19,8 +21,21 @@ export function GameProvider({children}) {
           const gameDoc = val.data();
           setChatRef(gameDoc.chatRef);
         });
+    } else {
+      // If there's no gameRef, get it from user doc.
+      firestore
+        .doc(`users/${user.uid}`)
+        .get()
+        .then(async userRef => {
+          const userData = await userRef.data();
+          if (userData) {
+            const gameRefArr = await userData.gameRefArr;
+            const lastGameRef = gameRefArr[gameRefArr.length - 1];
+            setGameRef(lastGameRef);
+          }
+        });
     }
-  }, [gameRef]);
+  }, [gameRef, user.uid]);
 
   return (
     <GameContext.Provider value={{gameRef, setGameRef, chatRef}}>
@@ -79,6 +94,13 @@ async function startGame(user, setGameRef, history) {
     roundRefArr: [roundOneRef],
   };
   const gameRef = await firestore.collection('games').add(game);
+
+  // Store gameRef to gameRef array on the user document.
+  const userRef = await firestore.doc(`users/${user.uid}`).get();
+  const gameRefArr = await userRef.data().gameRefArr;
+  await firestore
+    .doc(`users/${user.uid}`)
+    .update({gameRefArr: [...gameRefArr, gameRef]});
 
   // Push room query string to url.
   const url = setParams({room: gameRef.id});

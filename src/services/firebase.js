@@ -47,6 +47,7 @@ export const createUserDocument = async (user, additionalData) => {
         email,
         photoURL,
         createdAt,
+        gameRefArr: [],
         ...additionalData,
       });
     } catch (error) {
