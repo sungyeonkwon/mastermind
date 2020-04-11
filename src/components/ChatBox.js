@@ -41,8 +41,11 @@ export default function ChatBox({user, gameRef, chatRef}) {
     <div className="chat-box">
       <div>
         {chatContent.length &&
-          chatContent.map(({message, timestamp}, index) => (
-            <p key={index}>{message}</p>
+          chatContent.map(({user, message, isNarration}, index) => (
+            <p key={index}>
+              <span>{!isNarration && user.displayName + ': '} </span>
+              {message}
+            </p>
           ))}
       </div>
       <input
