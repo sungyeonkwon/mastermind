@@ -50,7 +50,7 @@ export const withGame = Component => {
   return WrappedComponent;
 };
 
-async function startGame(user, setGameRef) {
+async function startGame(user, setGameRef, history) {
   // Create a chat document, an array starting with a narration.
   const chat = {
     chatContent: [
@@ -80,6 +80,16 @@ async function startGame(user, setGameRef) {
   };
   const gameRef = await firestore.collection('games').add(game);
 
+  // Push room query string to url.
+  const url = setParams({room: gameRef.id});
+  gameRef.id && url && history.push(`?${url}`);
+
   // Save the gameRef object to the game provider state.
   setGameRef(gameRef);
+}
+
+function setParams({room = ''}) {
+  const searchParams = new URLSearchParams();
+  searchParams.set('room', room);
+  return searchParams.toString();
 }
