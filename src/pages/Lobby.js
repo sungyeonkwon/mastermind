@@ -10,7 +10,6 @@ export default function Lobby({
   startGame,
   joinGame,
   setGameRef,
-  setChatRef,
   setGameDoc,
   setRoundRef,
   history,
@@ -96,7 +95,14 @@ export default function Lobby({
           <Link
             to={`/game?room=${roomId}`}
             onClick={_event =>
-              joinGame(_event, roomId, user, setGameRef, setChatRef, setGameDoc)
+              joinGame(
+                _event,
+                roomId,
+                user,
+                setGameRef,
+                setGameDoc,
+                setRoundRef
+              )
             }>
             Enter the room
           </Link>

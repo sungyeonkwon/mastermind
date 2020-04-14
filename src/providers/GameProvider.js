@@ -13,8 +13,6 @@ export function GameProvider({children}) {
   const [optionValue, setOptionValue] = useState('');
   const [gameRef, setGameRef] = useState({id: null});
   const [gameDoc, setGameDoc] = useState({});
-  const [roundRef, setRoundRef] = useState(null);
-  const [roundDoc, setRoundDoc] = useState(null);
   const user = useContext(UserContext);
 
   useEffect(() => {
@@ -32,19 +30,10 @@ export function GameProvider({children}) {
       // TODO: unsubscribe.
       firestore.doc(`games/${gameIdFromUrl}`).onSnapshot(snapshot => {
         setGameRef(snapshot.ref);
+        setGameDoc(snapshot.data());
       });
     }
   }, [gameRef, user.uid]);
-
-  useEffect(() => {
-    if (gameRef && gameRef.id && roundRef) {
-      // TODO: unsubscribe.
-      roundRef.onSnapshot(snapshot => {
-        const roundDoc = snapshot.data();
-        setRoundDoc(roundDoc);
-      });
-    }
-  }, [gameRef, roundRef, setRoundRef]);
 
   return (
     <GameContext.Provider
@@ -53,13 +42,10 @@ export function GameProvider({children}) {
         gameRef,
         optionType,
         optionValue,
-        roundRef,
-        roundDoc,
         setGameRef,
         setGameDoc,
         setOptionType,
         setOptionValue,
-        setRoundRef,
         updateGame,
       }}>
       {children}
@@ -75,9 +61,6 @@ export const withGame = Component => {
         gameRef,
         optionType,
         optionValue,
-        roundDoc,
-        roundRef,
-        setChatRef,
         setGameDoc,
         setGameRef,
         setOptionType,
@@ -91,9 +74,6 @@ export const withGame = Component => {
           joinGame={joinGame}
           optionType={optionType}
           optionValue={optionValue}
-          roundDoc={roundDoc}
-          roundRef={roundRef}
-          setChatRef={setChatRef}
           setGameDoc={setGameDoc}
           setGameRef={setGameRef}
           setOptionType={setOptionType}
@@ -113,13 +93,17 @@ export const withGame = Component => {
   return WrappedComponent;
 };
 
-async function updateGame(roundRef, type, value, rowIndex, columnIndex) {
-  const roundData = await (await roundRef.get()).data();
-  const newArr = [...roundData.rowArr];
+async function updateGame(gameRef, type, value, rowIndex, columnIndex) {
+  const gameData = await (await gameRef.get()).data();
+  const roundData = gameData.roundArr[gameData.currentRound];
+  const newRowArr = [...roundData.rowArr];
   type === 'guess'
-    ? (newArr[rowIndex].guessArr[columnIndex] = value)
-    : (newArr[rowIndex].clueArr[columnIndex] = value);
-  roundRef.update({rowArr: [...newArr]});
+    ? (newRowArr[rowIndex].guessArr[columnIndex] = value)
+    : (newRowArr[rowIndex].clueArr[columnIndex] = value);
+  roundData.rowArr = newRowArr;
+  gameRef.update({
+    roundArr: [...gameData.roundArr],
+  });
 }
 
 async function joinGame(_event, roomId, user, setGameRef, setGameDoc) {
@@ -141,7 +125,7 @@ async function joinGame(_event, roomId, user, setGameRef, setGameDoc) {
   setGameDoc(gameDoc);
 }
 
-async function startGame(user, setGameRef, history, setGameDoc, setRoundRef) {
+async function startGame(user, setGameRef, history, setGameDoc) {
   // Create row array.
   const rowArr = [];
   rowArr.length = GameConfig.rowCount;
@@ -158,15 +142,13 @@ async function startGame(user, setGameRef, history, setGameDoc, setRoundRef) {
     codeArr: [],
     rowArr,
   };
-  const roundOneRef = await firestore.collection('rounds').add(roundOne);
-  setRoundRef(roundOneRef);
 
   // Create a game document.
   const game = {
     playerOne: user,
     playerTwo: '',
     currentRound: 0,
-    roundRefArr: [roundOneRef],
+    roundArr: [roundOne],
     isFinished: false,
     chatContent: [
       {

@@ -7,7 +7,7 @@ function Row({
   optionType,
   optionValue,
   rowIndex,
-  roundDoc,
+  gameRef,
   gameDoc,
   updateGame,
 }) {
@@ -15,20 +15,25 @@ function Row({
     event.preventDefault();
     const row = event.target.dataset.rowIndex;
     const col = event.target.dataset.columnIndex;
-    const currentRoundRef = gameDoc.roundRefArr[gameDoc.currentRound];
-    updateGame(currentRoundRef, optionType, optionValue, row, col);
+    updateGame(gameRef, optionType, optionValue, row, col);
   };
 
   const handleDragOver = event => {
     event.preventDefault();
   };
 
+  let round;
+  try {
+    round = gameDoc.roundArr[gameDoc.currentRound];
+  } catch (error) {
+    // console.log(error);
+  }
   return (
     <div
       className="row"
       onDragOver={handleDragOver}
       onDrop={event => handleDrop(event)}>
-      {roundDoc.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
+      {round && round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
         <Guess
           color={val}
           key={columnIndex}
@@ -37,7 +42,7 @@ function Row({
         />
       ))}
 
-      {roundDoc.rowArr[rowIndex].clueArr.map((val, columnIndex) => (
+      {round && round.rowArr[rowIndex].clueArr.map((val, columnIndex) => (
         <Clue
           color={val}
           key={columnIndex}
@@ -83,11 +88,18 @@ function Clue({columnIndex, rowIndex, color}) {
   );
 }
 
-export default function Board({roundDoc}) {
+export default function Board({ gameDoc }) {
+  let round;
+  try {
+    round = gameDoc.roundArr[gameDoc.currentRound];
+  } catch (error) {
+    // console.log(error);
+  }
+
   return (
     <div className="board">
-      {roundDoc &&
-        roundDoc.rowArr.map((_val, rowIndex) => (
+      {round &&
+        round.rowArr.map((_val, rowIndex) => (
           <RowWithGame key={rowIndex} rowIndex={rowIndex} />
         ))}
       <Code />

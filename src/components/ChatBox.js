@@ -27,7 +27,7 @@ export default function ChatBox({user, gameRef, gameDoc}) {
       };
       if (gameRef) {
         gameRef
-          .set({chatContent: [...chatContent, line]})
+          .update({chatContent: [...chatContent, line]})
           .then(() => setValue(''));
       }
     }
