@@ -12,6 +12,9 @@ export function GameProvider({children}) {
   const [optionType, setOptionType] = useState('');
   const [optionValue, setOptionValue] = useState('');
   const [gameRef, setGameRef] = useState({id: null});
+  const [gameDoc, setGameDoc] = useState({});
+  const [roundRef, setRoundRef] = useState(null);
+  const [roundDoc, setRoundDoc] = useState(null);
   const [chatRef, setChatRef] = useState('');
   const user = useContext(UserContext);
 
@@ -21,6 +24,7 @@ export function GameProvider({children}) {
       firestore.doc(`games/${gameRef.id}`).onSnapshot(snapshot => {
         const gameDoc = snapshot.data();
         // TODO: On the lobby case.
+        setGameDoc(gameDoc);
         gameDoc && setChatRef(gameDoc.chatRef);
       });
     } else {
@@ -34,17 +38,33 @@ export function GameProvider({children}) {
     }
   }, [gameRef, user.uid]);
 
+  useEffect(() => {
+    if (gameRef && gameRef.id && roundRef) {
+      // TODO: unsubscribe.
+      roundRef.onSnapshot(snapshot => {
+        const roundDoc = snapshot.data();
+        setRoundDoc(roundDoc);
+      });
+    }
+  }, [gameRef, roundRef, setRoundRef]);
+
   return (
     <GameContext.Provider
       value={{
-        gameRef,
-        setGameRef,
         chatRef,
-        setChatRef,
+        gameDoc,
+        gameRef,
         optionType,
-        setOptionType,
         optionValue,
+        setChatRef,
+        roundRef,
+        roundDoc,
+        setGameRef,
+        setGameDoc,
+        setOptionType,
         setOptionValue,
+        setRoundRef,
+        updateGame,
       }}>
       {children}
     </GameContext.Provider>
@@ -55,26 +75,38 @@ export const withGame = Component => {
   const WrappedComponent = props => (
     <GameContext.Consumer>
       {({
-        gameRef,
-        setGameRef,
         chatRef,
-        setChatRef,
+        gameDoc,
+        gameRef,
         optionType,
-        setOptionType,
         optionValue,
+        roundDoc,
+        roundRef,
+        setChatRef,
+        setGameDoc,
+        setGameRef,
+        setOptionType,
         setOptionValue,
+        setRoundRef,
+        updateGame,
       }) => (
         <Component
           chatRef={chatRef}
+          gameDoc={gameDoc}
           gameRef={gameRef}
           joinGame={joinGame}
           optionType={optionType}
           optionValue={optionValue}
+          roundDoc={roundDoc}
+          roundRef={roundRef}
           setChatRef={setChatRef}
+          setGameDoc={setGameDoc}
           setGameRef={setGameRef}
           setOptionType={setOptionType}
           setOptionValue={setOptionValue}
+          setRoundRef={setRoundRef}
           startGame={startGame}
+          updateGame={updateGame}
           {...props}
         />
       )}
@@ -87,7 +119,23 @@ export const withGame = Component => {
   return WrappedComponent;
 };
 
-async function joinGame(_event, roomId, user, setGameRef, setChatRef) {
+async function updateGame(roundRef, type, value, rowIndex, columnIndex) {
+  const roundData = await (await roundRef.get()).data();
+  const newArr = [...roundData.rowArr];
+  type === 'guess'
+    ? (newArr[rowIndex].guessArr[columnIndex] = value)
+    : (newArr[rowIndex].clueArr[columnIndex] = value);
+  roundRef.update({rowArr: [...newArr]});
+}
+
+async function joinGame(
+  _event,
+  roomId,
+  user,
+  setGameRef,
+  setChatRef,
+  setGameDoc
+) {
   // TODO: Ensure the user is not the same as player one.
   // Update gameRef's player Two.
   if (!user) return;
@@ -104,11 +152,13 @@ async function joinGame(_event, roomId, user, setGameRef, setChatRef) {
   const gameDoc = await gameRef.get();
   const chatRef = gameDoc.data().chatRef;
   setGameRef(gameRef);
+  setGameDoc(gameDoc);
   setChatRef(chatRef);
 }
 
-async function startGame(user, setGameRef, history) {
+async function startGame(user, setGameRef, history, setGameDoc, setRoundRef) {
   // Create a chat document, an array starting with a narration.
+  // TODO: this should just be in the game document to simplify.
   const chat = {
     chatContent: [
       {
@@ -124,22 +174,28 @@ async function startGame(user, setGameRef, history) {
   // Create row array.
   const rowArr = [];
   rowArr.length = GameConfig.rowCount;
-  rowArr.fill({clueArr: [], guessArr: []});
-  const rowArrRef = await firestore.collection('rows').add({rowArr});
+  // TODO: clean the default values.
+  rowArr.fill({
+    clueArr: ['default', 'default', 'default', 'default', 'default'],
+    guessArr: ['default', 'default', 'default', 'default', 'default'],
+  });
 
   // Create a round document for the first game.
   const roundOne = {
     codemaker: user,
     codebreaker: '',
-    rowArrRef,
+    codeArr: [],
+    rowArr,
   };
   const roundOneRef = await firestore.collection('rounds').add(roundOne);
+  setRoundRef(roundOneRef);
 
   // Create a game document.
   const game = {
     playerOne: user,
     playerTwo: '',
     chatRef,
+    currentRound: 0,
     roundRefArr: [roundOneRef],
     isFinished: false,
   };
@@ -157,5 +213,7 @@ async function startGame(user, setGameRef, history) {
   gameRef.id && url && history.push(`?${url}`);
 
   // Save the gameRef object to the game provider state.
+  const gameDoc = await gameRef.get();
   setGameRef(gameRef);
+  setGameDoc(gameDoc);
 }

@@ -11,6 +11,8 @@ export default function Lobby({
   joinGame,
   setGameRef,
   setChatRef,
+  setGameDoc,
+  setRoundRef,
   history,
 }) {
   const [role, setRole] = useState('codemaker');
@@ -70,7 +72,11 @@ export default function Lobby({
         <p>
           room ID: <span>23423</span>
         </p>
-        <Link to="/game" onClick={() => startGame(user, setGameRef, history)}>
+        <Link
+          to="/game"
+          onClick={() =>
+            startGame(user, setGameRef, history, setGameDoc, setRoundRef)
+          }>
           Enter the room
         </Link>
       </div>
@@ -90,7 +96,7 @@ export default function Lobby({
           <Link
             to={`/game?room=${roomId}`}
             onClick={_event =>
-              joinGame(_event, roomId, user, setGameRef, setChatRef)
+              joinGame(_event, roomId, user, setGameRef, setChatRef, setGameDoc)
             }>
             Enter the room
           </Link>

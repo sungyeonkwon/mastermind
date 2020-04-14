@@ -37,9 +37,7 @@ export default function OptionBox({setOptionType, setOptionValue}) {
             color={color}
             data-type="guess"
             data-value={color}
-            onDrag={handleDrag}>
-            {color}
-          </ColorPeg>
+            onDrag={handleDrag}></ColorPeg>
         ))}
       </Options>
       <Options>
@@ -51,9 +49,7 @@ export default function OptionBox({setOptionType, setOptionValue}) {
             color={color}
             data-type="clue"
             data-value={color}
-            onDrag={handleDrag}>
-            {color}
-          </ColorPeg>
+            onDrag={handleDrag}></ColorPeg>
         ))}
       </Options>
     </div>
