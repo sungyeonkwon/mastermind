@@ -1,6 +1,5 @@
 export const GameConfig = {
   clueCount: 2,
-  clueSpotCount: 4,
   guessSpotCount: 5,
   rounds: 2,
   rowCount: 12,

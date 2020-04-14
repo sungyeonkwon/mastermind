@@ -10,7 +10,7 @@ function Row() {
         <Guess key={index} />
       ))}
 
-      {[...Array(GameConfig.clueSpotCount).keys()].map((_val, index) => (
+      {[...Array(GameConfig.guessSpotCount).keys()].map((_val, index) => (
         <Clue key={index} />
       ))}
     </div>
@@ -28,11 +28,11 @@ function Code() {
 }
 
 function Guess() {
-  return <div className="guess">guess</div>;
+  return <div className="guess">g</div>;
 }
 
 function Clue() {
-  return <div className="clue">clue</div>;
+  return <div className="clue">c</div>;
 }
 
 export default function Board() {
