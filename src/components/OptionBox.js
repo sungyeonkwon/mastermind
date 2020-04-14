@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {COLOR_OPTIONS, CLUE_OPTIONS} from '../shared/config';
+import {GUESS_OPTIONS, CLUE_OPTIONS} from '../shared/config';
+import {withGame} from '../providers/GameProvider';
 
 const Options = styled.div`
   border: 1px solid black;
@@ -18,13 +19,25 @@ const ColorPeg = styled.div`
   width: 50px;
 `;
 
-export default function OptionBox() {
+export default function OptionBox({setOptionType, setOptionValue}) {
+  // TODO: Use throttle.
+  const handleDrag = event => {
+    setOptionType(event.target.dataset.type);
+    setOptionValue(event.target.dataset.value);
+  };
+
   return (
     <div className="option-box">
       <Options>
         Guess options:
-        {COLOR_OPTIONS.map((color, index) => (
-          <ColorPeg key={index} color={color}>
+        {GUESS_OPTIONS.map((color, index) => (
+          <ColorPeg
+            draggable
+            key={index}
+            color={color}
+            data-type="guess"
+            data-value={color}
+            onDrag={handleDrag}>
             {color}
           </ColorPeg>
         ))}
@@ -32,7 +45,13 @@ export default function OptionBox() {
       <Options>
         Clue options:
         {CLUE_OPTIONS.map((color, index) => (
-          <ColorPeg key={index} color={color}>
+          <ColorPeg
+            draggable
+            key={index}
+            color={color}
+            data-type="clue"
+            data-value={color}
+            onDrag={handleDrag}>
             {color}
           </ColorPeg>
         ))}
@@ -40,3 +59,5 @@ export default function OptionBox() {
     </div>
   );
 }
+
+export const OptionBoxWithGame = withGame(OptionBox);

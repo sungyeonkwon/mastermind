@@ -6,7 +6,7 @@ export const GameConfig = {
   winningPoint: 10,
 };
 
-export const COLOR_OPTIONS = [
+export const GUESS_OPTIONS = [
   'red',
   'blue',
   'green',
@@ -16,3 +16,14 @@ export const COLOR_OPTIONS = [
 ];
 
 export const CLUE_OPTIONS = ['black', 'white'];
+
+// rowArr = [
+//   {
+//     clueArr: [],
+//     guessArr: [],
+//   },
+//   {
+//     clueArr: [],
+//     guessArr: [],
+//   },
+// ]

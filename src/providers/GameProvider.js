@@ -2,12 +2,14 @@ import React, {createContext, useEffect, useState, useContext} from 'react';
 
 import {firestore} from '../services/firebase';
 import {Narration} from '../shared/constants';
-import {getDisplayName} from '../shared/utils';
+import {getDisplayName, setRoomParam, getRoomParam} from '../shared/utils';
 import {UserContext} from './UserProvider';
 
 export const GameContext = createContext();
 
 export function GameProvider({children}) {
+  const [optionType, setOptionType] = useState('');
+  const [optionValue, setOptionValue] = useState('');
   const [gameRef, setGameRef] = useState({id: null});
   const [chatRef, setChatRef] = useState('');
   const user = useContext(UserContext);
@@ -19,7 +21,11 @@ export function GameProvider({children}) {
         .get()
         .then(gameRef => {
           const gameDoc = gameRef.data();
-          setChatRef(gameDoc.chatRef);
+
+          // TODO: On the lobby case.
+          if (gameDoc) {
+            setChatRef(gameDoc.chatRef);
+          }
         });
     } else {
       // If there's no gameRef, get it from url params.
@@ -33,7 +39,17 @@ export function GameProvider({children}) {
   }, [gameRef, user.uid]);
 
   return (
-    <GameContext.Provider value={{gameRef, setGameRef, chatRef, setChatRef}}>
+    <GameContext.Provider
+      value={{
+        gameRef,
+        setGameRef,
+        chatRef,
+        setChatRef,
+        optionType,
+        setOptionType,
+        optionValue,
+        setOptionValue,
+      }}>
       {children}
     </GameContext.Provider>
   );
@@ -42,14 +58,27 @@ export function GameProvider({children}) {
 export const withGame = Component => {
   const WrappedComponent = props => (
     <GameContext.Consumer>
-      {({gameRef, setGameRef, chatRef, setChatRef}) => (
+      {({
+        chatRef,
+        gameRef,
+        optionType,
+        optionValue,
+        setChatRef,
+        setGameRef,
+        setOptionType,
+        setOptionValue,
+      }) => (
         <Component
-          startGame={startGame}
-          joinGame={joinGame}
-          setGameRef={setGameRef}
-          setChatRef={setChatRef}
           chatRef={chatRef}
           gameRef={gameRef}
+          joinGame={joinGame}
+          optionType={optionType}
+          optionValue={optionValue}
+          setChatRef={setChatRef}
+          setGameRef={setGameRef}
+          setOptionType={setOptionType}
+          setOptionValue={setOptionValue}
+          startGame={startGame}
           {...props}
         />
       )}
@@ -96,11 +125,15 @@ async function startGame(user, setGameRef, history) {
   };
   const chatRef = await firestore.collection('chats').add(chat);
 
+  // Create Rows array.
+  const rowArr = {rows: []};
+  const rowArrRef = await firestore.collection('rows').add(rowArr);
+
   // Create a round document for the first game.
   const roundOne = {
     codemaker: user,
     codebreaker: '',
-    rowRefArr: [],
+    rowArrRef,
   };
   const roundOneRef = await firestore.collection('rounds').add(roundOne);
 
@@ -127,17 +160,4 @@ async function startGame(user, setGameRef, history) {
 
   // Save the gameRef object to the game provider state.
   setGameRef(gameRef);
-}
-
-function setRoomParam({room = ''}) {
-  const searchParams = new URLSearchParams();
-  searchParams.set('room', room);
-  return searchParams.toString();
-}
-
-function getRoomParam() {
-  const searchParams = new URLSearchParams(
-    document.location.search.substring(1)
-  );
-  return searchParams.get('room');
 }
