@@ -16,25 +16,20 @@ export function GameProvider({children}) {
 
   useEffect(() => {
     if (gameRef && gameRef.id) {
-      firestore
-        .doc(`games/${gameRef.id}`)
-        .get()
-        .then(gameRef => {
-          const gameDoc = gameRef.data();
-
-          // TODO: On the lobby case.
-          if (gameDoc) {
-            setChatRef(gameDoc.chatRef);
-          }
-        });
+      // TODO: unsubscribe.
+      firestore.doc(`games/${gameRef.id}`).onSnapshot(snapshot => {
+        const gameDoc = snapshot.data();
+        // TODO: On the lobby case.
+        gameDoc && setChatRef(gameDoc.chatRef);
+      });
     } else {
       // If there's no gameRef, get it from url params.
       // TODO: validation check with user id.
       const gameIdFromUrl = getRoomParam();
-      firestore
-        .doc(`games/${gameIdFromUrl}`)
-        .get()
-        .then(async gameRef => setGameRef(gameRef));
+      // TODO: unsubscribe.
+      firestore.doc(`games/${gameIdFromUrl}`).onSnapshot(snapshot => {
+        setGameRef(snapshot);
+      });
     }
   }, [gameRef, user.uid]);
 
@@ -59,13 +54,13 @@ export const withGame = Component => {
   const WrappedComponent = props => (
     <GameContext.Consumer>
       {({
-        chatRef,
         gameRef,
-        optionType,
-        optionValue,
-        setChatRef,
         setGameRef,
+        chatRef,
+        setChatRef,
+        optionType,
         setOptionType,
+        optionValue,
         setOptionValue,
       }) => (
         <Component

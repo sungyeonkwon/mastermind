@@ -11,6 +11,7 @@ export default function ChatBox({user, gameRef, chatRef}) {
   // Subscribe to the chat doc.
   useEffect(() => {
     if (chatRef) {
+      // TODO: unsubscribe.
       chatRef.onSnapshot(snapshot => {
         const chatData = collectIdsandDocs(snapshot);
         setChatContent(chatData.chatContent);
