@@ -2,22 +2,16 @@ import React, {useState, useEffect} from 'react';
 
 import {withUser} from '../providers/UserProvider';
 import {withGame} from '../providers/GameProvider';
-import {collectIdsandDocs} from '../shared/utils';
 
-export default function ChatBox({user, gameRef, chatRef}) {
+export default function ChatBox({user, gameRef, gameDoc}) {
   const [value, setValue] = useState('');
   const [chatContent, setChatContent] = useState('');
 
-  // Subscribe to the chat doc.
   useEffect(() => {
-    if (chatRef) {
-      // TODO: unsubscribe.
-      chatRef.onSnapshot(snapshot => {
-        const chatData = collectIdsandDocs(snapshot);
-        setChatContent(chatData.chatContent);
-      });
+    if (gameDoc) {
+      setChatContent(gameDoc.chatContent);
     }
-  }, [chatRef, chatContent.length]);
+  }, [gameDoc]);
 
   const handleChange = event => {
     setValue(event.target.value);
@@ -31,9 +25,10 @@ export default function ChatBox({user, gameRef, chatRef}) {
         timestamp: new Date(),
         user: user,
       };
-      if (chatRef) {
-        chatRef.set({chatContent: [...chatContent, line]});
-        setValue('');
+      if (gameRef) {
+        gameRef
+          .set({chatContent: [...chatContent, line]})
+          .then(() => setValue(''));
       }
     }
   };
@@ -41,8 +36,10 @@ export default function ChatBox({user, gameRef, chatRef}) {
   return (
     <div className="chat-box">
       <div>
-        {chatContent.length &&
-          chatContent.map(({user, message, isNarration}, index) => (
+        {gameDoc &&
+          gameDoc.chatContent &&
+          gameDoc.chatContent.length &&
+          gameDoc.chatContent.map(({user, message, isNarration}, index) => (
             <p key={index}>
               <span>{!isNarration && user.displayName + ': '} </span>
               {message}
