@@ -22,18 +22,13 @@ export function GameProvider({children}) {
           setChatRef(gameDoc.chatRef);
         });
     } else {
-      // If there's no gameRef, get it from user doc.
+      // If there's no gameRef, get it from url params.
+      // TODO: validation check with user id.
+      const gameIdFromUrl = getRoomParam();
       firestore
-        .doc(`users/${user.uid}`)
+        .doc(`games/${gameIdFromUrl}`)
         .get()
-        .then(async userRef => {
-          const userData = await userRef.data();
-          if (userData) {
-            const gameRefArr = await userData.gameRefArr;
-            const lastGameRef = gameRefArr[gameRefArr.length - 1];
-            setGameRef(lastGameRef);
-          }
-        });
+        .then(async gameRef => setGameRef(gameRef));
     }
   }, [gameRef, user.uid]);
 
@@ -70,21 +65,21 @@ export const withGame = Component => {
 async function joinGame(_event, roomId, user, setGameRef, setChatRef) {
   // TODO: Ensure the user is not the same as player one.
   // Update gameRef's player Two.
-  if (user) {
-    const gameRef = await firestore.doc(`games/${roomId}`);
-    await gameRef.update({
-      playerTwo: user,
-    });
+  if (!user) return;
 
-    // Push the gameRef to the user game array.
-    await firestore.doc(`users/${user.uid}`).update({gameRefArr: [gameRef]});
+  const gameRef = await firestore.doc(`games/${roomId}`);
+  await gameRef.update({
+    playerTwo: user,
+  });
 
-    // Update gameRef and chatRef.
-    const gameDoc = await gameRef.get();
-    const chatRef = gameDoc.data().chatRef;
-    setGameRef(gameRef);
-    setChatRef(chatRef);
-  }
+  // Push the gameRef to the user game array.
+  await firestore.doc(`users/${user.uid}`).update({gameRefArr: [gameRef]});
+
+  // Update gameRef and chatRef.
+  const gameDoc = await gameRef.get();
+  const chatRef = gameDoc.data().chatRef;
+  setGameRef(gameRef);
+  setChatRef(chatRef);
 }
 
 async function startGame(user, setGameRef, history) {
@@ -115,6 +110,7 @@ async function startGame(user, setGameRef, history) {
     playerTwo: '',
     chatRef,
     roundRefArr: [roundOneRef],
+    isFinished: false,
   };
   const gameRef = await firestore.collection('games').add(game);
 
@@ -126,15 +122,22 @@ async function startGame(user, setGameRef, history) {
     .update({gameRefArr: [...gameRefArr, gameRef]});
 
   // Push room query string to url.
-  const url = setParams({room: gameRef.id});
+  const url = setRoomParam({room: gameRef.id});
   gameRef.id && url && history.push(`?${url}`);
 
   // Save the gameRef object to the game provider state.
   setGameRef(gameRef);
 }
 
-function setParams({room = ''}) {
+function setRoomParam({room = ''}) {
   const searchParams = new URLSearchParams();
   searchParams.set('room', room);
   return searchParams.toString();
+}
+
+function getRoomParam() {
+  const searchParams = new URLSearchParams(
+    document.location.search.substring(1)
+  );
+  return searchParams.get('room');
 }
