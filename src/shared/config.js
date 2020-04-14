@@ -16,14 +16,3 @@ export const GUESS_OPTIONS = [
 ];
 
 export const CLUE_OPTIONS = ['black', 'white'];
-
-// rowArr = [
-//   {
-//     clueArr: [],
-//     guessArr: [],
-//   },
-//   {
-//     clueArr: [],
-//     guessArr: [],
-//   },
-// ]

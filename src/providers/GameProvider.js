@@ -4,6 +4,7 @@ import {firestore} from '../services/firebase';
 import {Narration} from '../shared/constants';
 import {getDisplayName, setRoomParam, getRoomParam} from '../shared/utils';
 import {UserContext} from './UserProvider';
+import {GameConfig} from '../shared/config';
 
 export const GameContext = createContext();
 
@@ -120,9 +121,11 @@ async function startGame(user, setGameRef, history) {
   };
   const chatRef = await firestore.collection('chats').add(chat);
 
-  // Create Rows array.
-  const rowArr = {rows: []};
-  const rowArrRef = await firestore.collection('rows').add(rowArr);
+  // Create row array.
+  const rowArr = [];
+  rowArr.length = GameConfig.rowCount;
+  rowArr.fill({clueArr: [], guessArr: []});
+  const rowArrRef = await firestore.collection('rows').add({rowArr});
 
   // Create a round document for the first game.
   const roundOne = {
