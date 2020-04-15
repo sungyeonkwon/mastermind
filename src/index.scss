@@ -6,6 +6,7 @@
 
 .game {
   width: 100%;
+  min-height: 100vh;
 }
 
 .board {
@@ -56,6 +57,7 @@
   flex-direction: column;
   width: 50%;
   height: 100%;
+  min-height: 100vh;
 }
 
 .lobby {
