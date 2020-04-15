@@ -4,6 +4,7 @@ import {GameConfig} from '../shared/config';
 import {withGame} from '../providers/GameProvider';
 import {withUser} from '../providers/UserProvider';
 import {isCodebreaker} from '../shared/utils';
+import {updateGame} from '../services/game';
 
 function Row({rowIndex, gameDoc, user}) {
   let round, index;
@@ -64,7 +65,6 @@ function Spot({
   rowIndex,
   color,
   spotType,
-  updateGame,
   gameRef,
   optionType,
   optionValue,

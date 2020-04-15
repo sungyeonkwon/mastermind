@@ -4,11 +4,10 @@ import {Link} from 'react-router-dom';
 import {withUser} from '../providers/UserProvider';
 import {withGame} from '../providers/GameProvider';
 import {firestore} from '../services/firebase';
+import {startGame, joinGame} from '../services/game';
 
 export default function Lobby({
   user,
-  startGame,
-  joinGame,
   setGameRef,
   setGameDoc,
   setRoundRef,
