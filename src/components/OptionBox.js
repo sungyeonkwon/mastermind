@@ -29,7 +29,6 @@ export default function OptionBox({setOptionType, setOptionValue}) {
   return (
     <div className="option-box">
       <Options>
-        Guess options:
         {GUESS_OPTIONS.map((color, index) => (
           <ColorPeg
             draggable
@@ -41,7 +40,6 @@ export default function OptionBox({setOptionType, setOptionValue}) {
         ))}
       </Options>
       <Options>
-        Clue options:
         {CLUE_OPTIONS.map((color, index) => (
           <ColorPeg
             draggable

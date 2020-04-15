@@ -30,12 +30,13 @@ export default function ChatBox({user, gameRef, gameDoc}) {
           .update({chatContent: [...chatContent, line]})
           .then(() => setValue(''));
       }
+      // TODO: Scroll down.
     }
   };
 
   return (
-    <div className="chat-box">
-      <div>
+    <div>
+      <div className="chat-box">
         {gameDoc &&
           gameDoc.chatContent &&
           gameDoc.chatContent.length &&

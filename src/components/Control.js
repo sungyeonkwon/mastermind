@@ -7,7 +7,6 @@ export default function Control() {
     <div className="control">
       <ChatBoxWithGame />
       <OptionBoxWithGame />
-      <button>Submit decision</button>
     </div>
   );
 }

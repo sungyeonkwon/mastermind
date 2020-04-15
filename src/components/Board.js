@@ -33,23 +33,25 @@ function Row({
       className="row"
       onDragOver={handleDragOver}
       onDrop={event => handleDrop(event)}>
-      {round && round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
-        <Guess
-          color={val}
-          key={columnIndex}
-          columnIndex={columnIndex}
-          rowIndex={rowIndex}
-        />
-      ))}
+      {round &&
+        round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
+          <Guess
+            color={val}
+            key={columnIndex}
+            columnIndex={columnIndex}
+            rowIndex={rowIndex}
+          />
+        ))}
 
-      {round && round.rowArr[rowIndex].clueArr.map((val, columnIndex) => (
-        <Clue
-          color={val}
-          key={columnIndex}
-          columnIndex={columnIndex}
-          rowIndex={rowIndex}
-        />
-      ))}
+      {round &&
+        round.rowArr[rowIndex].clueArr.map((val, columnIndex) => (
+          <Clue
+            color={val}
+            key={columnIndex}
+            columnIndex={columnIndex}
+            rowIndex={rowIndex}
+          />
+        ))}
     </div>
   );
 }
@@ -66,29 +68,29 @@ function Code() {
 
 function Guess({columnIndex, rowIndex, color}) {
   return (
-    <div
+    <p
       className="guess"
       style={{backgroundColor: color}}
       data-column-index={columnIndex}
       data-row-index={rowIndex}>
       {rowIndex}, {columnIndex}
-    </div>
+    </p>
   );
 }
 
 function Clue({columnIndex, rowIndex, color}) {
   return (
-    <div
+    <p
       className="clue"
       style={{backgroundColor: color}}
       data-column-index={columnIndex}
       data-row-index={rowIndex}>
       {rowIndex}, {columnIndex}
-    </div>
+    </p>
   );
 }
 
-export default function Board({ gameDoc }) {
+export default function Board({gameDoc}) {
   let round;
   try {
     round = gameDoc.roundArr[gameDoc.currentRound];
