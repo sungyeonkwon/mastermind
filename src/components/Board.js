@@ -4,25 +4,7 @@ import {GameConfig} from '../shared/config';
 import {withGame} from '../providers/GameProvider';
 import {withUser} from '../providers/UserProvider';
 
-function Row({
-  optionType,
-  optionValue,
-  rowIndex,
-  gameRef,
-  gameDoc,
-  updateGame,
-}) {
-  const handleDrop = event => {
-    event.preventDefault();
-    const row = event.target.dataset.rowIndex;
-    const col = event.target.dataset.columnIndex;
-    updateGame(gameRef, optionType, optionValue, row, col);
-  };
-
-  const handleDragOver = event => {
-    event.preventDefault();
-  };
-
+function Row({rowIndex, gameDoc, updateGame}) {
   let round;
   try {
     round = gameDoc.roundArr[gameDoc.currentRound];
@@ -30,13 +12,11 @@ function Row({
     // console.log(error);
   }
   return (
-    <div
-      className="row"
-      onDragOver={handleDragOver}
-      onDrop={event => handleDrop(event)}>
+    <div className="row">
       {round &&
         round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
-          <Guess
+          <SpotWithGame
+            spotType="guess"
             color={val}
             key={columnIndex}
             columnIndex={columnIndex}
@@ -46,7 +26,8 @@ function Row({
 
       {round &&
         round.rowArr[rowIndex].clueArr.map((val, columnIndex) => (
-          <Clue
+          <SpotWithGame
+            spotType="clue"
             color={val}
             key={columnIndex}
             columnIndex={columnIndex}
@@ -61,28 +42,54 @@ function Code() {
   return (
     <div className="code">
       {[...Array(GameConfig.guessSpotCount).keys()].map((_val, columnIndex) => (
-        <Guess key={columnIndex} rowIndex="12" columnIndex={columnIndex} />
+        <SpotWithGame
+          spotType="guess"
+          key={columnIndex}
+          rowIndex="12"
+          columnIndex={columnIndex}
+        />
       ))}
     </div>
   );
 }
 
-function Guess({columnIndex, rowIndex, color}) {
-  return (
-    <p
-      className="guess"
-      style={{backgroundColor: color}}
-      data-column-index={columnIndex}
-      data-row-index={rowIndex}>
-      {rowIndex}, {columnIndex}
-    </p>
-  );
-}
+function Spot({
+  columnIndex,
+  rowIndex,
+  color,
+  spotType,
+  updateGame,
+  gameRef,
+  optionType,
+  optionValue,
+}) {
+  const borderColor = spotType === 'guess' ? 'red' : 'black';
 
-function Clue({columnIndex, rowIndex, color}) {
+  const handleDragOver = event => {
+    event.preventDefault();
+  };
+
+  const handleDrop = event => {
+    event.preventDefault();
+    const row = event.target.dataset.rowIndex;
+    const col = event.target.dataset.columnIndex;
+    updateGame(gameRef, optionType, optionValue, row, col, spotType);
+  };
+
+  const handleDragEnter = event => {
+    event.target.style.border = `3px solid ${borderColor}`;
+  };
+
+  const handleDragLeave = event => {
+    event.target.style.border = `1px solid ${borderColor}`;
+  };
   return (
     <p
-      className="clue"
+      onDrop={event => handleDrop(event)}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      className={spotType}
       style={{backgroundColor: color}}
       data-column-index={columnIndex}
       data-row-index={rowIndex}>
@@ -115,4 +122,5 @@ export default function Board({gameDoc, user}) {
 }
 
 export const RowWithGame = withGame(Row);
+export const SpotWithGame = withGame(Spot);
 export const BoardWithGame = withGame(withUser(Board));

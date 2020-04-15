@@ -93,13 +93,22 @@ export const withGame = Component => {
   return WrappedComponent;
 };
 
-async function updateGame(gameRef, type, value, rowIndex, columnIndex) {
+async function updateGame(
+  gameRef,
+  type,
+  value,
+  rowIndex,
+  columnIndex,
+  spotType
+) {
   const gameData = await (await gameRef.get()).data();
   const roundData = gameData.roundArr[gameData.currentRound];
   const newRowArr = [...roundData.rowArr];
-  type === 'guess'
-    ? (newRowArr[rowIndex].guessArr[columnIndex] = value)
-    : (newRowArr[rowIndex].clueArr[columnIndex] = value);
+  if (type === 'guess' && spotType === 'guess') {
+    newRowArr[rowIndex].guessArr[columnIndex] = value;
+  } else if (type === 'clue' && spotType === 'clue') {
+    newRowArr[rowIndex].clueArr[columnIndex] = value;
+  }
   roundData.rowArr = newRowArr;
   gameRef.update({
     roundArr: [...gameData.roundArr],
