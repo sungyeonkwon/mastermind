@@ -3,16 +3,22 @@ import React from 'react';
 import {GameConfig} from '../shared/config';
 import {withGame} from '../providers/GameProvider';
 import {withUser} from '../providers/UserProvider';
+import {isCodebreaker} from '../shared/utils';
 
-function Row({rowIndex, gameDoc, updateGame}) {
-  let round;
+function Row({rowIndex, gameDoc, user}) {
+  let round, index;
   try {
     round = gameDoc.roundArr[gameDoc.currentRound];
+    index = isCodebreaker(gameDoc, user)
+      ? GameConfig.rowCount - rowIndex
+      : rowIndex + 1;
   } catch (error) {
     // console.log(error);
   }
+
   return (
     <div className="row">
+      <span>{index}</span>
       {round &&
         round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
           <SpotWithGame
@@ -99,18 +105,17 @@ function Spot({
 }
 
 export default function Board({gameDoc, user}) {
-  let round, isCodebreaker;
+  let round, codebreaker;
   try {
     round = gameDoc.roundArr[gameDoc.currentRound];
-    isCodebreaker =
-      gameDoc.roundArr[gameDoc.currentRound].codebreaker.uid === user.uid;
+    codebreaker = isCodebreaker(gameDoc, user);
   } catch (error) {
     // console.log(error);
   }
 
   return (
     <div className="board">
-      <div style={{order: isCodebreaker && 1}}>
+      <div style={{order: codebreaker && 1}}>
         {round &&
           round.rowArr.map((_val, rowIndex) => (
             <RowWithGame key={rowIndex} rowIndex={rowIndex} />
@@ -121,6 +126,6 @@ export default function Board({gameDoc, user}) {
   );
 }
 
-export const RowWithGame = withGame(Row);
+export const RowWithGame = withGame(withUser(Row));
 export const SpotWithGame = withGame(Spot);
 export const BoardWithGame = withGame(withUser(Board));

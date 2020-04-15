@@ -18,3 +18,7 @@ export function getRoomParam() {
   );
   return searchParams.get('room');
 }
+
+export function isCodebreaker(gameDoc, user) {
+  return gameDoc.roundArr[gameDoc.currentRound].codebreaker.uid === user.uid;
+}

@@ -26,6 +26,13 @@ $grey: #ccc;
 
 .row {
   display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    width: 40px;
+    font-size: 14px;
+  }
 }
 
 .clue,
