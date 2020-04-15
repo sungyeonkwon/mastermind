@@ -2,6 +2,7 @@ import React from 'react';
 
 import {GameConfig} from '../shared/config';
 import {withGame} from '../providers/GameProvider';
+import {withUser} from '../providers/UserProvider';
 
 function Row({
   optionType,
@@ -60,7 +61,7 @@ function Code() {
   return (
     <div className="code">
       {[...Array(GameConfig.guessSpotCount).keys()].map((_val, columnIndex) => (
-        <Guess key={columnIndex} columnIndex={columnIndex} />
+        <Guess key={columnIndex} rowIndex="12" columnIndex={columnIndex} />
       ))}
     </div>
   );
@@ -90,24 +91,28 @@ function Clue({columnIndex, rowIndex, color}) {
   );
 }
 
-export default function Board({gameDoc}) {
-  let round;
+export default function Board({gameDoc, user}) {
+  let round, isCodebreaker;
   try {
     round = gameDoc.roundArr[gameDoc.currentRound];
+    isCodebreaker =
+      gameDoc.roundArr[gameDoc.currentRound].codebreaker.uid === user.uid;
   } catch (error) {
     // console.log(error);
   }
 
   return (
     <div className="board">
-      {round &&
-        round.rowArr.map((_val, rowIndex) => (
-          <RowWithGame key={rowIndex} rowIndex={rowIndex} />
-        ))}
+      <div style={{order: isCodebreaker && 1}}>
+        {round &&
+          round.rowArr.map((_val, rowIndex) => (
+            <RowWithGame key={rowIndex} rowIndex={rowIndex} />
+          ))}
+      </div>
       <Code />
     </div>
   );
 }
 
 export const RowWithGame = withGame(Row);
-export const BoardWithGame = withGame(Board);
+export const BoardWithGame = withGame(withUser(Board));

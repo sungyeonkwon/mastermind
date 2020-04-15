@@ -108,37 +108,46 @@ async function updateGame(gameRef, type, value, rowIndex, columnIndex) {
 
 async function joinGame(_event, roomId, user, setGameRef, setGameDoc) {
   // TODO: Ensure the user is not the same as player one.
-  // Update gameRef's player Two.
   if (!user) return;
 
   const gameRef = await firestore.doc(`games/${roomId}`);
+  const gameDoc = await gameRef.get();
+  const gameData = gameDoc.data();
+
+  const roundOne = {...gameData.roundArr[0]};
+  const roundOneUpdated = {
+    ...roundOne,
+    codemaker: roundOne.codemaker ? roundOne.codemaker : user,
+    codebreaker: roundOne.codebreaker ? roundOne.codebreaker : user,
+  };
+
   await gameRef.update({
+    ...gameData,
     playerTwo: user,
+    roundArr: [roundOneUpdated],
   });
 
   // Push the gameRef to the user game array.
   await firestore.doc(`users/${user.uid}`).update({gameRefArr: [gameRef]});
 
   // Update gameRef.
-  const gameDoc = await gameRef.get();
   setGameRef(gameRef);
   setGameDoc(gameDoc);
 }
 
-async function startGame(user, setGameRef, history, setGameDoc) {
+async function startGame(user, role, setGameRef, history, setGameDoc) {
   // Create row array.
   const rowArr = [];
   rowArr.length = GameConfig.rowCount;
-  // TODO: clean the default values.
   rowArr.fill({
-    clueArr: ['default', 'default', 'default', 'default', 'default'],
-    guessArr: ['default', 'default', 'default', 'default', 'default'],
+    clueArr: Array.from({length: GameConfig.guessSpotCount}, v => 'white'),
+    guessArr: Array.from({length: GameConfig.guessSpotCount}, v => 'white'),
   });
 
   // Create a round document for the first game.
   const roundOne = {
-    codemaker: user,
-    codebreaker: '',
+    codemaker: role === 'codemaker' ? user : '',
+    codebreaker: role === 'codebreaker' ? user : '',
     codeArr: [],
     rowArr,
   };

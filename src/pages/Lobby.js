@@ -70,11 +70,12 @@ export default function Lobby({
         Starting game...
         <p>
           room ID: <span>23423</span>
+          Copy this ID and send it to your friend to play with.
         </p>
         <Link
           to="/game"
           onClick={() =>
-            startGame(user, setGameRef, history, setGameDoc, setRoundRef)
+            startGame(user, role, setGameRef, history, setGameDoc, setRoundRef)
           }>
           Enter the room
         </Link>
