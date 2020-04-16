@@ -25,19 +25,21 @@ export default function Lobby({
   const handleRoomInputChange = event => {
     const roomId = event.target.value;
     // TODO: Implement throttle.
-    firestore
-      .doc(`games/${roomId}`)
-      .get()
-      .then(gameRef => {
-        if (!gameRef.exists) {
-          setErrorInvalid(true);
-        } else {
-          if (gameRef.data().playerTwo) {
-            setErrorFull(true);
+    try {
+      firestore
+        .doc(`games/${roomId}`)
+        .get()
+        .then(gameRef => {
+          if (!gameRef.exists) {
+            setErrorInvalid(true);
+          } else {
+            if (gameRef.data().playerTwo) {
+              setErrorFull(true);
+            }
           }
-        }
-        setRoomId(roomId);
-      });
+          setRoomId(roomId);
+        });
+    } catch {}
   };
 
   return (

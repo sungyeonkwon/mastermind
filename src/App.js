@@ -1,5 +1,7 @@
 import React from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import 'normalize.css';
+import './styles/main.scss';
 
 import {AuthenticationWithUser} from './components/Authentification';
 import {GameProvider} from './providers/GameProvider';

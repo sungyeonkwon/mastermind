@@ -1,0 +1,15 @@
+@import './variables';
+@import './lobby';
+@import './game';
+@import './board';
+@import './chat';
+
+* {
+  box-sizing: border-box;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+
+  &:focus {
+    outline: none;
+  }
+}

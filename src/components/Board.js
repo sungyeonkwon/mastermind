@@ -19,7 +19,7 @@ function Row({rowIndex, gameDoc, user}) {
 
   return (
     <div className="row">
-      <span>{index}</span>
+      <span class="index label">{index}</span>
       {round &&
         round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
           <SpotWithGame
@@ -47,10 +47,10 @@ function Row({rowIndex, gameDoc, user}) {
 
 function Code() {
   return (
-    <div className="code">
+    <div className="answer">
       {[...Array(GameConfig.guessSpotCount).keys()].map((_val, columnIndex) => (
         <SpotWithGame
-          spotType="guess"
+          spotType="code"
           key={columnIndex}
           rowIndex="12"
           columnIndex={columnIndex}
@@ -69,26 +69,26 @@ function Spot({
   optionType,
   optionValue,
 }) {
-  const borderColor = spotType === 'guess' ? 'red' : 'black';
-
   const handleDragOver = event => {
     event.preventDefault();
   };
 
   const handleDrop = event => {
     event.preventDefault();
+    event.target.style.transform = 'scale(1)';
     const row = event.target.dataset.rowIndex;
     const col = event.target.dataset.columnIndex;
     updateGame(gameRef, optionType, optionValue, row, col, spotType);
   };
 
   const handleDragEnter = event => {
-    event.target.style.border = `3px solid ${borderColor}`;
+    event.target.style.transform = 'scale(1.3)';
   };
 
   const handleDragLeave = event => {
-    event.target.style.border = `1px solid ${borderColor}`;
+    event.target.style.transform = 'scale(1)';
   };
+
   return (
     <p
       onDrop={event => handleDrop(event)}
@@ -98,9 +98,7 @@ function Spot({
       className={spotType}
       style={{backgroundColor: color}}
       data-column-index={columnIndex}
-      data-row-index={rowIndex}>
-      {rowIndex}, {columnIndex}
-    </p>
+      data-row-index={rowIndex}></p>
   );
 }
 

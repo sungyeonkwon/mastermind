@@ -5,7 +5,7 @@ import {signOut} from '../services/firebase';
 
 const SectionStyle = styled.section`
   align-items: center;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   display: flex;
   height: 30px;
@@ -17,6 +17,13 @@ const SectionStyle = styled.section`
 
   p {
     padding: 0 10px;
+  }
+
+  button {
+    background: black;
+    color: white;
+    border: none;
+    cursor: pointer;
   }
 `;
 

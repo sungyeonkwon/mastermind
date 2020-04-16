@@ -1,0 +1,37 @@
+.chat-box {
+  background: black;
+  color: white;
+  width: 100%;
+  height: $box-height;
+  border: 1px solid black;
+  overflow-y: scroll;
+  position: relative;
+  padding: 10px;
+
+  p {
+    margin: 0 0 15px;
+  }
+
+  span {
+    color: yellow;
+  }
+
+  .narration {
+    color: rgb(0, 255, 0);
+  }
+
+  .spacer {
+    height: 100px;
+    width: 100%;
+  }
+}
+
+input {
+  caret-color: white;
+  background-color: blue;
+  color: white;
+  padding: 10px;
+  height: $input-height;
+  width: 100%;
+  border: none;
+}

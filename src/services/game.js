@@ -1,5 +1,5 @@
 import {GameConfig} from '../shared/config';
-import {Narration} from '../shared/constants';
+import {Narration, Color} from '../shared/constants';
 import {firestore} from './firebase';
 import {setRoomParam} from '../shared/utils';
 
@@ -61,8 +61,14 @@ export async function startGame(user, role, setGameRef, history, setGameDoc) {
   const rowArr = [];
   rowArr.length = GameConfig.rowCount;
   rowArr.fill({
-    clueArr: Array.from({length: GameConfig.guessSpotCount}, v => 'white'),
-    guessArr: Array.from({length: GameConfig.guessSpotCount}, v => 'white'),
+    clueArr: Array.from(
+      {length: GameConfig.guessSpotCount},
+      v => Color.GREY_200
+    ),
+    guessArr: Array.from(
+      {length: GameConfig.guessSpotCount},
+      v => Color.GREY_200
+    ),
   });
 
   // Create a round document for the first game.

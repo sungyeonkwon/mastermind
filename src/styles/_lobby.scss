@@ -1,0 +1,33 @@
+.lobby {
+  background: black;
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  display: flex;
+  padding: $padding-page;
+}
+
+.logo {
+  font-size: 200px;
+  position: absolute;
+  padding: $padding-page;
+  font-weight: 300;
+  bottom: 0;
+  left: 0;
+}
+
+.start,
+.join {
+  width: 50%;
+  border: 1px solid white;
+  border-radius: 50%;
+}
+
+.error {
+  display: none;
+  color: red;
+}
+
+.error.show {
+  display: block;
+}

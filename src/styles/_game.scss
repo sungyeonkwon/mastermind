@@ -1,0 +1,45 @@
+.game {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  height: 100vh;
+  background: $grey-200;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 100%;
+  min-height: 100vh;
+  padding: $padding-page;
+  justify-content: space-between;
+
+  .option-box {
+    width: 100%;
+    height: $box-height;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+
+    p {
+      margin: 0;
+    }
+
+    .group {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      div {
+        display: flex;
+        justify-content: center;
+      }
+    }
+
+    .peg {
+      cursor: pointer;
+    }
+  }
+}

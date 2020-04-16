@@ -1,0 +1,12 @@
+// Colours
+$grey-200: #ccc;
+$grey-300: #b0b0b0;
+$grey-400: #7d7d7d;
+$grey-500: #595959;
+
+// Sizes
+$padding-page: 30px;
+$input-height: 40px;
+$box-height: calc((100vh - #{$padding-page} * 3 - #{$input-height}) / 2);
+$guess-size: 50px;
+$clue-size: 27px;

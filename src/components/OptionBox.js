@@ -4,19 +4,22 @@ import styled from 'styled-components';
 import {GUESS_OPTIONS, CLUE_OPTIONS} from '../shared/config';
 import {withGame} from '../providers/GameProvider';
 
-const Options = styled.div`
-  border: 1px solid black;
-  padding: 10px;
-`;
-
-const ColorPeg = styled.div`
+const GuessPeg = styled.div`
   background: ${props => props.color};
   border-radius: 50%;
-  border: 1px solid black;
   display: inline-block;
-  height: 50px;
+  height: 70px;
   margin: 10px;
-  width: 50px;
+  width: 70px;
+`;
+
+const CluePeg = styled.div`
+  background: ${props => props.color};
+  border-radius: 50%;
+  display: inline-block;
+  height: 40px;
+  margin: 10px;
+  width: 40px;
 `;
 
 export default function OptionBox({setOptionType, setOptionValue}) {
@@ -28,28 +31,36 @@ export default function OptionBox({setOptionType, setOptionValue}) {
 
   return (
     <div className="option-box">
-      <Options>
-        {GUESS_OPTIONS.map((color, index) => (
-          <ColorPeg
-            draggable
-            key={index}
-            color={color}
-            data-type="guess"
-            data-value={color}
-            onDrag={handleDrag}></ColorPeg>
-        ))}
-      </Options>
-      <Options>
-        {CLUE_OPTIONS.map((color, index) => (
-          <ColorPeg
-            draggable
-            key={index}
-            color={color}
-            data-type="clue"
-            data-value={color}
-            onDrag={handleDrag}></ColorPeg>
-        ))}
-      </Options>
+      <div className="group">
+        <p className="label">Guess Pegs</p>
+        <div>
+          {GUESS_OPTIONS.map((color, index) => (
+            <GuessPeg
+              className="peg"
+              draggable
+              key={index}
+              color={color}
+              data-type="guess"
+              data-value={color}
+              onDrag={handleDrag}></GuessPeg>
+          ))}
+        </div>
+      </div>
+      <div className="group">
+        <p className="label">Clue Pegs</p>
+        <div>
+          {CLUE_OPTIONS.map((color, index) => (
+            <CluePeg
+              className="peg"
+              draggable
+              key={index}
+              color={color}
+              data-type="clue"
+              data-value={color}
+              onDrag={handleDrag}></CluePeg>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
