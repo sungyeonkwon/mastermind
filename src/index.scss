@@ -80,8 +80,12 @@ $grey: #ccc;
     max-height: 50vh;
     border: 1px solid black;
     overflow-y: scroll;
-    padding-bottom: 60px;
     position: relative;
+
+    .spacer {
+      height: 100px;
+      width: 100%;
+    }
   }
 
   input {

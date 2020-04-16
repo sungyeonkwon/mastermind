@@ -30,7 +30,9 @@ export default function ChatBox({user, gameRef, gameDoc}) {
           .update({chatContent: [...chatContent, line]})
           .then(() => setValue(''));
       }
-      // TODO: Scroll down.
+
+      // Scroll to bottom.
+      document.querySelector('.spacer').scrollIntoView();
     }
   };
 
@@ -46,6 +48,7 @@ export default function ChatBox({user, gameRef, gameDoc}) {
               {message}
             </p>
           ))}
+        <div class="spacer"></div>
       </div>
       <input
         type="text"
