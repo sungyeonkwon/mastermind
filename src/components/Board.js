@@ -19,7 +19,7 @@ function Row({rowIndex, gameDoc, user}) {
 
   return (
     <div className="row">
-      <span class="index label">{index}</span>
+      <span className="index label">{index}</span>
       {round &&
         round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
           <SpotWithGame

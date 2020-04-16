@@ -48,7 +48,7 @@ export default function ChatBox({user, gameRef, gameDoc}) {
               {message}
             </p>
           ))}
-        <div class="spacer"></div>
+        <div className="spacer"></div>
       </div>
       <input
         placeholder="Type whatever."

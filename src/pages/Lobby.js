@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
 
 import {withUser} from '../providers/UserProvider';
 import {withGame} from '../providers/GameProvider';
@@ -13,7 +12,7 @@ export default function Lobby({
   setRoundRef,
   history,
 }) {
-  const [role, setRole] = useState('codemaker');
+  const [role, setRole] = useState('');
   const [roomId, setRoomId] = useState('');
   const [errorFull, setErrorFull] = useState(false);
   const [errorInvalid, setErrorInvalid] = useState(false);
@@ -44,73 +43,77 @@ export default function Lobby({
 
   return (
     <div className="lobby">
-      <div className="start">
-        <div>
-          I will first be
-          <input
-            checked={role === 'codemaker'}
-            onChange={handleRoleChange}
-            type="radio"
-            id="codemaker"
-            value="codemaker"
-            name="role"
-          />
-          <label htmlFor="codemaker">codemaker</label>
-        </div>
-        <div>
-          <input
-            checked={role === 'codebreaker'}
-            onChange={handleRoleChange}
-            type="radio"
-            id="codebreaker"
-            value="codebreaker"
-            name="role"
-          />
-          <label htmlFor="codebreaker">codebreaker</label>
-        </div>
-        Starting game...
-        <p>
-          room ID: <span>23423</span>
-          Copy this ID and send it to your friend to play with.
-        </p>
-        <Link
-          to="/game"
-          onClick={() =>
-            startGame(user, role, setGameRef, history, setGameDoc, setRoundRef)
-          }>
-          Enter the room
-        </Link>
-      </div>
-      <div className="join">
-        Enter the existing game room id.
-        <span className={`error full ${errorFull && 'show'}`}>
-          Error: Room is already full.
-        </span>
-        <span className={`error invalid ${errorInvalid && 'show'}`}>
-          Error: Room id is invalid.
-        </span>
-        <p>
-          Room ID:
-          <input type="text" value={roomId} onChange={handleRoomInputChange} />
-        </p>
-        {!errorFull && !errorInvalid && roomId && (
-          <Link
-            to={`/game?room=${roomId}`}
-            onClick={_event =>
-              joinGame(
-                _event,
-                roomId,
+      <h1 className="logo">Mastermind</h1>
+
+      <div className="container">
+        <div className="start">
+          <button>Start a new game.</button>I will first be
+          <div className="option">
+            <input
+              checked={role === 'codemaker'}
+              onChange={handleRoleChange}
+              type="radio"
+              id="codemaker"
+              value="codemaker"
+              name="role"
+            />
+            <label htmlFor="codemaker">codemaker</label>
+          </div>
+          <div className="option">
+            <input
+              checked={role === 'codebreaker'}
+              onChange={handleRoleChange}
+              type="radio"
+              id="codebreaker"
+              value="codebreaker"
+              name="role"
+            />
+            <label htmlFor="codebreaker">codebreaker</label>
+          </div>
+          <p>
+            room ID: <span>23423</span>
+          </p>
+          <p> Copy this ID and send it to your friend to play with.</p>
+          <button
+            onClick={() =>
+              startGame(
                 user,
+                role,
                 setGameRef,
+                history,
                 setGameDoc,
                 setRoundRef
               )
             }>
             Enter the room
-          </Link>
-        )}
+          </button>
+        </div>
+        <div className="join">
+          <span className={`error full ${errorFull && 'show'}`}>
+            Error: Room is already full.
+          </span>
+          <span className={`error invalid ${errorInvalid && 'show'}`}>
+            Error: Room id is invalid.
+          </span>
+          <p>
+            Join a game with ID:
+            <input
+              type="text"
+              value={roomId}
+              onChange={handleRoomInputChange}
+            />
+          </p>
+          {!errorFull && !errorInvalid && roomId && (
+            <button
+              className="enter"
+              onClick={_event =>
+                joinGame(_event, roomId, user, setGameRef, setGameDoc, history)
+              }>
+              Enter the room
+            </button>
+          )}
+        </div>
       </div>
-      <h1 className="logo">Mastermind</h1>
     </div>
   );
 }

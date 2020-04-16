@@ -24,14 +24,14 @@
     height: 100px;
     width: 100%;
   }
-}
 
-input {
-  caret-color: white;
-  background-color: blue;
-  color: white;
-  padding: 10px;
-  height: $input-height;
-  width: 100%;
-  border: none;
+  input {
+    caret-color: white;
+    background-color: blue;
+    color: white;
+    padding: 10px;
+    height: $input-height;
+    width: 100%;
+    border: none;
+  }
 }

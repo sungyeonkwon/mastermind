@@ -4,30 +4,52 @@
   height: 100vh;
   color: white;
   display: flex;
+  flex-direction: column;
   padding: $padding-page;
+
+  .container {
+    display: flex;
+  }
 }
 
 .logo {
-  font-size: 200px;
-  position: absolute;
-  padding: $padding-page;
+  font-size: 180px;
   font-weight: 300;
-  bottom: 0;
-  left: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .start,
 .join {
   width: 50%;
+  padding: $padding-page;
+
   border: 1px solid white;
-  border-radius: 50%;
 }
 
-.error {
-  display: none;
-  color: red;
+.start {
+  .option {
+    border: 1px solid white;
+    padding: 10px;
+  }
+
+  input {
+    display: inline-block;
+  }
 }
 
-.error.show {
-  display: block;
+.join {
+  .error {
+    display: none;
+    color: red;
+
+    &.show {
+      display: block;
+    }
+  }
+
+  .enter {
+    border: 1px solid red;
+    padding: 10px;
+  }
 }

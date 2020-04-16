@@ -27,7 +27,14 @@ export async function updateGame(
   });
 }
 
-export async function joinGame(_event, roomId, user, setGameRef, setGameDoc) {
+export async function joinGame(
+  _event,
+  roomId,
+  user,
+  setGameRef,
+  setGameDoc,
+  history
+) {
   // TODO: Ensure the user is not the same as player one.
   if (!user) return;
 
@@ -50,6 +57,10 @@ export async function joinGame(_event, roomId, user, setGameRef, setGameDoc) {
 
   // Push the gameRef to the user game array.
   await firestore.doc(`users/${user.uid}`).update({gameRefArr: [gameRef]});
+
+  // Push room query string to url.
+  const url = setRoomParam({room: roomId});
+  roomId && url && history.push(`game?${url}`);
 
   // Update gameRef.
   setGameRef(gameRef);
@@ -106,7 +117,7 @@ export async function startGame(user, role, setGameRef, history, setGameDoc) {
 
   // Push room query string to url.
   const url = setRoomParam({room: gameRef.id});
-  gameRef.id && url && history.push(`?${url}`);
+  gameRef.id && url && history.push(`game?${url}`);
 
   // Save the gameRef object to the game provider state.
   const gameDoc = await gameRef.get();
