@@ -43,14 +43,15 @@ export default function ChatBox({user, gameRef, gameDoc}) {
           gameDoc.chatContent &&
           gameDoc.chatContent.length &&
           gameDoc.chatContent.map(({user, message, isNarration}, index) => (
-            <p key={index}>
-              <span>{!isNarration && user.displayName + ': '} </span>
+            <p key={index} className={isNarration && 'narration'}>
+              <span>{!isNarration && ' ↳ ' + user.displayName + ' '} </span>
               {message}
             </p>
           ))}
         <div class="spacer"></div>
       </div>
       <input
+        placeholder="Type whatever."
         type="text"
         value={value}
         onChange={handleChange}
