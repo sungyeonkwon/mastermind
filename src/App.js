@@ -4,6 +4,7 @@ import 'normalize.css';
 import './styles/main.scss';
 
 import Header from './components/Header';
+import ScreenAlert from './components/ScreenAlert';
 import {GameProvider} from './providers/GameProvider';
 import {Routes} from './routes/routes';
 import {UserProvider} from './providers/UserProvider';
@@ -11,6 +12,7 @@ import {UserProvider} from './providers/UserProvider';
 function App() {
   return (
     <div>
+      <ScreenAlert />
       <UserProvider>
         <GameProvider>
           <Header />

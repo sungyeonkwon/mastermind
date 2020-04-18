@@ -24,3 +24,22 @@ button {
   border: none;
   outline: none;
 }
+
+.screen-alert {
+  background: red;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  text-align: center;
+  display: none;
+
+  @media screen and (max-width: 1279px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
