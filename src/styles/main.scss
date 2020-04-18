@@ -37,7 +37,7 @@ button {
   text-align: center;
   display: none;
 
-  @media screen and (max-width: 1279px) {
+  @media screen and (max-width: 1023px) {
     display: flex;
     justify-content: center;
     align-items: center;

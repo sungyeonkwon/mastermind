@@ -24,16 +24,32 @@ export default class Narrator {
     this._codebreaker = user;
   }
 
-  getLine() {
-    return 'I am a get line';
-  }
+  // TODO: implement narrator methods.
+  // getLine() {
+  //   return 'I am a get line';
+  // }
 
-  async next(step, delay = 0) {
-    const line = this.getLine();
-    const chatContent = await (await this.gameRef.get()).data().chatContent;
+  // async next(step, delay = 0) {
+  //   const line = this.getLine();
+  //   const chatContent = await (await this.gameRef.get()).data().chatContent;
 
-    setTimeout(() => {
-      this.gameRef.update({chatContent: [...chatContent, line]});
-    }, delay);
-  }
+  //   setTimeout(() => {
+  //     this.gameRef.update({chatContent: [...chatContent, line]});
+  //   }, delay);
+  // }
 }
+
+// async function promptCodeCreation(gameRef) {
+//   const line = {
+//     isNarration: true,
+//     message: Narration.pick[0],
+//     timestamp: new Date(),
+//   };
+
+//   const gameData = await (await gameRef.get()).data();
+//   const chatContent = gameData.chatContent;
+
+//   setTimeout(() => {
+//     gameRef.update({chatContent: [...chatContent, line]});
+//   }, CODE_PROMPT_DELAY);
+// }

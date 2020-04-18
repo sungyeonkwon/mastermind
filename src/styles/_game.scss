@@ -1,3 +1,22 @@
+.loading {
+  align-items: center;
+  background: blue;
+  color: white;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transition: top 0.4s ease-in;
+  width: 100vw;
+  z-index: 50;
+
+  &.hide {
+    top: -100vh;
+  }
+}
+
 .game {
   width: 100%;
   min-height: 100vh;

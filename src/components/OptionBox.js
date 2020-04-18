@@ -1,10 +1,12 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import {useCallbackRef} from 'use-callback-ref';
 
 import {withGame} from '../providers/GameProvider';
 import {coordsInRange} from '../shared/utils';
 import {guessArr, clueArr} from '../shared/constants';
 
 export default function OptionBox({
+  gameDoc,
   setOptionType,
   setOptionValue,
   setOptionEl,
@@ -13,8 +15,12 @@ export default function OptionBox({
   const [cluePool, setCluePool] = useState(null);
   const [guessContainerRect, setGuessContainerRect] = useState(null);
   const [clueContainerRect, setClueContainerRect] = useState(null);
-  const guessContainer = useRef(null);
-  const clueContainer = useRef(null);
+  const guessContainer = useCallbackRef(null, () =>
+    setGuessContainerRect(guessContainer.current.getBoundingClientRect())
+  );
+  const clueContainer = useCallbackRef(null, () =>
+    setClueContainerRect(clueContainer.current.getBoundingClientRect())
+  );
 
   // TODO: Use throttle.
   const handleDrag = event => {
@@ -22,14 +28,6 @@ export default function OptionBox({
     setOptionType(event.target.dataset.type);
     setOptionValue(event.target.dataset.value);
   };
-
-  if (guessContainer.current && !guessContainerRect) {
-    setGuessContainerRect(guessContainer.current.getBoundingClientRect());
-  }
-
-  if (clueContainer.current && !clueContainerRect) {
-    setClueContainerRect(clueContainer.current.getBoundingClientRect());
-  }
 
   useEffect(() => {
     if (guessContainerRect) {

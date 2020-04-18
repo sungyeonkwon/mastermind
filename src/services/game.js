@@ -70,7 +70,6 @@ export async function joinGame(
 
   // Update gameRef.
   setGameRef(gameRef);
-  setGameDoc(gameDoc);
 }
 
 export async function startGame(gameRef, setGameRef, history, setGameDoc) {
@@ -79,33 +78,14 @@ export async function startGame(gameRef, setGameRef, history, setGameDoc) {
   gameRef.id && url && history.push(`game?${url}`);
 
   // Save the gameRef object to the game provider state.
-  const gameDoc = await gameRef.get();
   setGameRef(gameRef);
-  setGameDoc(gameDoc);
-
-  // Encourage code creation
-  promptCodeCreation(gameRef);
-}
-
-async function promptCodeCreation(gameRef) {
-  const line = {
-    isNarration: true,
-    message: Narration.pick[0],
-    timestamp: new Date(),
-  };
-
-  const gameData = await (await gameRef.get()).data();
-  const chatContent = gameData.chatContent;
-
-  setTimeout(() => {
-    gameRef.update({chatContent: [...chatContent, line]});
-  }, CODE_PROMPT_DELAY);
 }
 
 /** Store gameRef to gameRef array on the user document. */
 export async function setUserGameRef(user, gameRef) {
   const userRef = await firestore.doc(`users/${user.uid}`).get();
-  const gameRefArr = await userRef.data().gameRefArr;
+  const userData = await userRef.data();
+  const gameRefArr = await userData.gameRefArr;
   firestore
     .doc(`users/${user.uid}`)
     .update({gameRefArr: [...gameRefArr, gameRef]});

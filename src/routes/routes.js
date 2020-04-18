@@ -1,5 +1,5 @@
 import {LobbyWithGame} from '../pages/Lobby';
-import Game from '../pages/Game';
+import {GameWithGame} from '../pages/Game';
 
 export const Routes = [
   {
@@ -10,6 +10,6 @@ export const Routes = [
   {
     path: '/game',
     exact: true,
-    component: Game,
+    component: GameWithGame,
   },
 ];
