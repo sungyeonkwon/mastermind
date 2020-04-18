@@ -1,6 +1,7 @@
 @import './variables';
 @import './lobby';
 @import './game';
+@import './header';
 @import './board';
 @import './chat';
 
@@ -12,4 +13,10 @@
   &:focus {
     outline: none;
   }
+}
+
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
 }

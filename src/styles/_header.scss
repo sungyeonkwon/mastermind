@@ -1,0 +1,39 @@
+header {
+  position: fixed;
+  background: $grey-500;
+  height: $header-height;
+  left: 0;
+  width: 100%;
+  padding-left: 10px;
+  top: 0;
+  color: $grey-200;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.current-user {
+  align-items: center;
+  background: green;
+  color: white;
+  display: flex;
+  height: 30px;
+  justify-content: center;
+  height: 100%;
+
+  button {
+    background: black;
+    color: white;
+    height: 100%;
+  }
+}
+
+.sign-in {
+  align-items: center;
+  background: red;
+  color: white;
+  display: flex;
+  height: 30px;
+  justify-content: center;
+  height: 100%;
+}

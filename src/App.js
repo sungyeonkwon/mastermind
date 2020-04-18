@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import 'normalize.css';
 import './styles/main.scss';
 
-import {AuthenticationWithUser} from './components/Authentification';
+import Header from './components/Header';
 import {GameProvider} from './providers/GameProvider';
 import {Routes} from './routes/routes';
 import {UserProvider} from './providers/UserProvider';
@@ -13,7 +13,7 @@ function App() {
     <div>
       <UserProvider>
         <GameProvider>
-          <AuthenticationWithUser />
+          <Header />
           <Router>
             <Switch>
               {Routes.map(({path, exact, component: Component, ...rest}) => (
