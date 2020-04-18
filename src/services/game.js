@@ -3,6 +3,8 @@ import {Narration, Color} from '../shared/constants';
 import {firestore} from './firebase';
 import {setRoomParam} from '../shared/utils';
 
+const CODE_PROMPT_DELAY = 5000;
+
 export async function updateGame(
   gameRef,
   type,
@@ -14,13 +16,17 @@ export async function updateGame(
   const gameData = await (await gameRef.get()).data();
   const roundData = gameData.roundArr[gameData.currentRound];
   const newRowArr = [...roundData.rowArr];
+  const newCodeArr = [...roundData.codeArr];
 
   if (type === 'guess' && spotType === 'guess') {
     newRowArr[rowIndex].guessArr[columnIndex] = value;
   } else if (type === 'clue' && spotType === 'clue') {
     newRowArr[rowIndex].clueArr[columnIndex] = value;
+  } else if (type === 'guess' && spotType === 'code') {
+    newCodeArr[columnIndex] = value;
   }
   roundData.rowArr = newRowArr;
+  roundData.codeArr = newCodeArr;
 
   gameRef.update({
     roundArr: [...gameData.roundArr],
@@ -68,6 +74,47 @@ export async function joinGame(
 }
 
 export async function startGame(user, role, setGameRef, history, setGameDoc) {
+  const gameRef = await getGameRef(user, role);
+  setUserGameRef(user, gameRef);
+
+  // Push room query string to url.
+  const url = setRoomParam({room: gameRef.id});
+  gameRef.id && url && history.push(`game?${url}`);
+
+  // Save the gameRef object to the game provider state.
+  const gameDoc = await gameRef.get();
+  setGameRef(gameRef);
+  setGameDoc(gameDoc);
+
+  // Encourage code creation
+  promptCodeCreation(gameRef);
+}
+
+async function promptCodeCreation(gameRef) {
+  const line = {
+    isNarration: true,
+    message: Narration.pick[0],
+    timestamp: new Date(),
+  };
+
+  const chatContent = await (await gameRef.get()).data().chatContent;
+
+  setTimeout(() => {
+    gameRef.update({chatContent: [...chatContent, line]});
+  }, CODE_PROMPT_DELAY);
+}
+
+/** Store gameRef to gameRef array on the user document. */
+async function setUserGameRef(user, gameRef) {
+  const userRef = await firestore.doc(`users/${user.uid}`).get();
+  const gameRefArr = await userRef.data().gameRefArr;
+  firestore
+    .doc(`users/${user.uid}`)
+    .update({gameRefArr: [...gameRefArr, gameRef]});
+}
+
+/** Create a new gameRef. */
+async function getGameRef(user, role) {
   // Create row array.
   const rowArr = [];
   rowArr.length = GameConfig.rowCount;
@@ -84,43 +131,30 @@ export async function startGame(user, role, setGameRef, history, setGameDoc) {
 
   // Create a round document for the first game.
   const roundOne = {
-    codemaker: role === 'codemaker' ? user : '',
+    codeArr: Array.from(
+      {length: GameConfig.guessSpotCount},
+      v => Color.GREY_200
+    ),
     codebreaker: role === 'codebreaker' ? user : '',
-    codeArr: [],
+    codemaker: role === 'codemaker' ? user : '',
     rowArr,
   };
 
   // Create a game document.
   const game = {
+    currentRound: 0,
+    isFinished: false,
     playerOne: user,
     playerTwo: '',
-    currentRound: 0,
     roundArr: [roundOne],
-    isFinished: false,
     chatContent: [
       {
         isNarration: true,
-        message: Narration.startGame,
+        message: Narration.start,
         timeStamp: new Date(),
-        // TODO: Move the first line of narration to here.
       },
     ],
   };
-  const gameRef = await firestore.collection('games').add(game);
 
-  // Store gameRef to gameRef array on the user document.
-  const userRef = await firestore.doc(`users/${user.uid}`).get();
-  const gameRefArr = await userRef.data().gameRefArr;
-  await firestore
-    .doc(`users/${user.uid}`)
-    .update({gameRefArr: [...gameRefArr, gameRef]});
-
-  // Push room query string to url.
-  const url = setRoomParam({room: gameRef.id});
-  gameRef.id && url && history.push(`game?${url}`);
-
-  // Save the gameRef object to the game provider state.
-  const gameDoc = await gameRef.get();
-  setGameRef(gameRef);
-  setGameDoc(gameDoc);
+  return await firestore.collection('games').add(game);
 }

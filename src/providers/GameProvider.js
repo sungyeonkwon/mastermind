@@ -3,6 +3,7 @@ import React, {createContext, useEffect, useState, useContext} from 'react';
 import {firestore} from '../services/firebase';
 import {getDisplayName, getRoomParam} from '../shared/utils';
 import {UserContext} from './UserProvider';
+import Narrator from '../services/narrator';
 
 export const GameContext = createContext();
 
@@ -12,6 +13,7 @@ export function GameProvider({children}) {
   const [gameRef, setGameRef] = useState({id: null});
   const [gameDoc, setGameDoc] = useState({});
   const user = useContext(UserContext);
+  const narrator = new Narrator();
 
   useEffect(() => {
     if (gameRef && gameRef.id) {
@@ -36,6 +38,7 @@ export function GameProvider({children}) {
   return (
     <GameContext.Provider
       value={{
+        narrator,
         gameDoc,
         gameRef,
         optionType,
@@ -54,6 +57,7 @@ export function withGame(Component) {
   const WrappedComponent = props => (
     <GameContext.Consumer>
       {({
+        narrator,
         gameDoc,
         gameRef,
         optionType,
@@ -65,6 +69,7 @@ export function withGame(Component) {
         setRoundRef,
       }) => (
         <Component
+          narrator={narrator}
           gameDoc={gameDoc}
           gameRef={gameRef}
           optionType={optionType}

@@ -6,22 +6,46 @@ import {withUser} from '../providers/UserProvider';
 import {isCodebreaker} from '../shared/utils';
 import {updateGame} from '../services/game';
 
-function Row({rowIndex, gameDoc, user}) {
-  let round, index;
+export default function Board({gameDoc, user}) {
+  let round, codebreaker, codeArr;
+
   try {
     round = gameDoc.roundArr[gameDoc.currentRound];
+    codeArr = round.codeArr;
+    codebreaker = isCodebreaker(gameDoc, user);
+  } catch (error) {}
+
+  return (
+    <div className="board">
+      <div style={{order: codebreaker && 1}}>
+        {round &&
+          round.rowArr.map((_val, rowIndex) => (
+            <RowWithGame key={rowIndex} rowIndex={rowIndex} />
+          ))}
+      </div>
+      <Code codeArr={codeArr} />
+    </div>
+  );
+}
+
+function Row({rowIndex, user, round, gameDoc}) {
+  let guessArr, clueArr, index;
+
+  try {
+    round = gameDoc.roundArr[gameDoc.currentRound];
+    guessArr = round.rowArr[rowIndex].guessArr;
+    clueArr = round.rowArr[rowIndex].clueArr;
     index = isCodebreaker(gameDoc, user)
       ? GameConfig.rowCount - rowIndex
       : rowIndex + 1;
-  } catch (error) {
-    // console.log(error);
-  }
+  } catch (error) {}
 
   return (
     <div className="row">
       <span className="index label">{index}</span>
-      {round &&
-        round.rowArr[rowIndex].guessArr.map((val, columnIndex) => (
+      {guessArr &&
+        guessArr.length &&
+        guessArr.map((val, columnIndex) => (
           <SpotWithGame
             spotType="guess"
             color={val}
@@ -31,8 +55,9 @@ function Row({rowIndex, gameDoc, user}) {
           />
         ))}
 
-      {round &&
-        round.rowArr[rowIndex].clueArr.map((val, columnIndex) => (
+      {clueArr &&
+        clueArr.length &&
+        clueArr.map((val, columnIndex) => (
           <SpotWithGame
             spotType="clue"
             color={val}
@@ -45,17 +70,20 @@ function Row({rowIndex, gameDoc, user}) {
   );
 }
 
-function Code() {
+function Code({codeArr}) {
   return (
     <div className="answer">
-      {[...Array(GameConfig.guessSpotCount).keys()].map((_val, columnIndex) => (
-        <SpotWithGame
-          spotType="code"
-          key={columnIndex}
-          rowIndex="12"
-          columnIndex={columnIndex}
-        />
-      ))}
+      {codeArr &&
+        codeArr.length &&
+        codeArr.map((val, columnIndex) => (
+          <SpotWithGame
+            spotType="code"
+            color={val}
+            key={columnIndex}
+            rowIndex="12"
+            columnIndex={columnIndex}
+          />
+        ))}
     </div>
   );
 }
@@ -99,28 +127,6 @@ function Spot({
       style={{backgroundColor: color}}
       data-column-index={columnIndex}
       data-row-index={rowIndex}></p>
-  );
-}
-
-export default function Board({gameDoc, user}) {
-  let round, codebreaker;
-  try {
-    round = gameDoc.roundArr[gameDoc.currentRound];
-    codebreaker = isCodebreaker(gameDoc, user);
-  } catch (error) {
-    // console.log(error);
-  }
-
-  return (
-    <div className="board">
-      <div style={{order: codebreaker && 1}}>
-        {round &&
-          round.rowArr.map((_val, rowIndex) => (
-            <RowWithGame key={rowIndex} rowIndex={rowIndex} />
-          ))}
-      </div>
-      <Code />
-    </div>
   );
 }
 
