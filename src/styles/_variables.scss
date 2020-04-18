@@ -6,8 +6,8 @@ $grey-500: #595959;
 
 // Sizes
 $padding-page: 25px;
-$input-height: 40px;
 $header-height: 32px;
-$box-height: calc((100vh - #{$padding-page} * 3 - #{$input-height}) / 2);
+$chat-input-height: 40px;
+$box-height: calc((100vh - #{$padding-page} * 4 - #{$chat-input-height}) / 2);
 $guess-size: 50px;
 $clue-size: 27px;

@@ -1,3 +1,6 @@
+import {multiplyArrSize} from './utils';
+import {GUESS_OPTIONS, CLUE_OPTIONS} from './config';
+
 // TODO: Dynamic calling instead of codemaker / codebreaker.
 export const Narration = {
   start: `Starting a new game, welcome!
@@ -18,3 +21,7 @@ export const Color = {
   GREY_400: '#7d7d7d',
   GREY_500: '#595959',
 };
+
+const FACTOR = 30;
+export const guessArr = multiplyArrSize(GUESS_OPTIONS, FACTOR);
+export const clueArr = multiplyArrSize(CLUE_OPTIONS, FACTOR);

@@ -9,7 +9,7 @@
   box-sizing: border-box;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 16px;
-  cursor: url('../assets/cursor_temp.png'), pointer !important;
+  cursor: url('../assets/cursor_temp.png') 15 5, pointer !important;
 
   &:focus {
     outline: none;
@@ -23,5 +23,4 @@ body {
 button {
   border: none;
   outline: none;
-  cursor: pointer;
 }

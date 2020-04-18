@@ -9,6 +9,7 @@ export const GameContext = createContext();
 
 export function GameProvider({children}) {
   const [optionType, setOptionType] = useState('');
+  const [optionEl, setOptionEl] = useState('');
   const [optionValue, setOptionValue] = useState('');
   const [gameRef, setGameRef] = useState({id: null});
   const [gameDoc, setGameDoc] = useState({});
@@ -43,10 +44,12 @@ export function GameProvider({children}) {
         gameRef,
         optionType,
         optionValue,
+        optionEl,
         setGameDoc,
         setGameRef,
         setOptionType,
         setOptionValue,
+        setOptionEl,
       }}>
       {children}
     </GameContext.Provider>
@@ -62,10 +65,12 @@ export function withGame(Component) {
         gameRef,
         optionType,
         optionValue,
+        optionEl,
         setGameDoc,
         setGameRef,
         setOptionType,
         setOptionValue,
+        setOptionEl,
         setRoundRef,
       }) => (
         <Component
@@ -74,10 +79,12 @@ export function withGame(Component) {
           gameRef={gameRef}
           optionType={optionType}
           optionValue={optionValue}
+          optionEl={optionEl}
           setGameDoc={setGameDoc}
           setGameRef={setGameRef}
           setOptionType={setOptionType}
           setOptionValue={setOptionValue}
+          setOptionEl={setOptionEl}
           setRoundRef={setRoundRef}
           {...props}
         />

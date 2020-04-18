@@ -28,15 +28,59 @@
     }
 
     .group {
+      position: relative;
       border: 4px solid $grey-400;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      height: 100%;
+      overflow: hidden;
 
-      div {
-        display: flex;
-        justify-content: center;
+      &.group-guess {
+        width: calc((50vw - #{$padding-page * 3}) * 0.7);
+      }
+
+      &.group-clue {
+        width: calc((50vw - #{$padding-page * 3}) * 0.3);
+      }
+
+      > div {
+        height: 100%;
       }
     }
+
+    .peg {
+      display: inline-block;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: none;
+
+      .guess & {
+        height: 70px;
+        width: 70px;
+      }
+
+      .clue & {
+        height: 40px;
+        width: 40px;
+      }
+    }
+  }
+}
+
+.label {
+  color: $grey-500;
+  background: $grey-300;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  padding: 5px;
+
+  &.index {
+    margin-right: 30px;
+    width: 30px;
   }
 }

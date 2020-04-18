@@ -96,6 +96,7 @@ function Spot({
   gameRef,
   optionType,
   optionValue,
+  optionEl,
 }) {
   const handleDragOver = event => {
     event.preventDefault();
@@ -107,6 +108,7 @@ function Spot({
     const row = event.target.dataset.rowIndex;
     const col = event.target.dataset.columnIndex;
     updateGame(gameRef, optionType, optionValue, row, col, spotType);
+    optionEl.remove();
   };
 
   const handleDragEnter = event => {
