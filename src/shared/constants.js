@@ -22,6 +22,6 @@ export const Color = {
   GREY_500: '#595959',
 };
 
-const FACTOR = 30;
+const FACTOR = 40;
 export const guessArr = multiplyArrSize(GUESS_OPTIONS, FACTOR);
 export const clueArr = multiplyArrSize(CLUE_OPTIONS, FACTOR);
