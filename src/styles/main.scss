@@ -9,10 +9,15 @@
   box-sizing: border-box;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 16px;
+  cursor: url('../assets/cursor_temp.png'), pointer !important;
 
   &:focus {
     outline: none;
   }
+}
+
+body {
+  overflow: hidden;
 }
 
 button {

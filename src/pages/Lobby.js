@@ -30,8 +30,9 @@ export default function Lobby({
   };
 
   const handleRoleChange = async event => {
-    const gameRef = await getGameRef(user, role);
     setRole(event.target.dataset.role);
+
+    const gameRef = await getGameRef(user, role);
     setGameRef(gameRef);
     setUserGameRef(user, gameRef);
     setStartRoomId(gameRef.id);
