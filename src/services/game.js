@@ -35,7 +35,7 @@ export async function updateGame(
 
 export async function joinGame(
   _event,
-  roomId,
+  joinRoomId,
   user,
   setGameRef,
   setGameDoc,
@@ -44,7 +44,7 @@ export async function joinGame(
   // TODO: Ensure the user is not the same as player one.
   if (!user) return;
 
-  const gameRef = await firestore.doc(`games/${roomId}`);
+  const gameRef = await firestore.doc(`games/${joinRoomId}`);
   const gameDoc = await gameRef.get();
   const gameData = gameDoc.data();
 
@@ -65,18 +65,15 @@ export async function joinGame(
   await firestore.doc(`users/${user.uid}`).update({gameRefArr: [gameRef]});
 
   // Push room query string to url.
-  const url = setRoomParam({room: roomId});
-  roomId && url && history.push(`game?${url}`);
+  const url = setRoomParam({room: joinRoomId});
+  joinRoomId && url && history.push(`game?${url}`);
 
   // Update gameRef.
   setGameRef(gameRef);
   setGameDoc(gameDoc);
 }
 
-export async function startGame(user, role, setGameRef, history, setGameDoc) {
-  const gameRef = await getGameRef(user, role);
-  setUserGameRef(user, gameRef);
-
+export async function startGame(gameRef, setGameRef, history, setGameDoc) {
   // Push room query string to url.
   const url = setRoomParam({room: gameRef.id});
   gameRef.id && url && history.push(`game?${url}`);
@@ -97,7 +94,8 @@ async function promptCodeCreation(gameRef) {
     timestamp: new Date(),
   };
 
-  const chatContent = await (await gameRef.get()).data().chatContent;
+  const gameData = await (await gameRef.get()).data();
+  const chatContent = gameData.chatContent;
 
   setTimeout(() => {
     gameRef.update({chatContent: [...chatContent, line]});
@@ -105,7 +103,7 @@ async function promptCodeCreation(gameRef) {
 }
 
 /** Store gameRef to gameRef array on the user document. */
-async function setUserGameRef(user, gameRef) {
+export async function setUserGameRef(user, gameRef) {
   const userRef = await firestore.doc(`users/${user.uid}`).get();
   const gameRefArr = await userRef.data().gameRefArr;
   firestore
@@ -114,7 +112,7 @@ async function setUserGameRef(user, gameRef) {
 }
 
 /** Create a new gameRef. */
-async function getGameRef(user, role) {
+export async function getGameRef(user, role) {
   // Create row array.
   const rowArr = [];
   rowArr.length = GameConfig.rowCount;

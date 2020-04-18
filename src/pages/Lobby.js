@@ -3,22 +3,43 @@ import React, {useState} from 'react';
 import {withUser} from '../providers/UserProvider';
 import {withGame} from '../providers/GameProvider';
 import {firestore} from '../services/firebase';
-import {startGame, joinGame} from '../services/game';
+import {
+  startGame,
+  getGameRef,
+  setUserGameRef,
+  joinGame,
+} from '../services/game';
+import {copyToClipboard} from '../shared/utils';
 
 export default function Lobby({
   user,
+  gameRef,
   setGameRef,
   setGameDoc,
   setRoundRef,
   history,
 }) {
-  const [role, setRole] = useState('');
-  const [roomId, setRoomId] = useState('');
   const [errorFull, setErrorFull] = useState(false);
   const [errorInvalid, setErrorInvalid] = useState(false);
+  const [role, setRole] = useState('');
+  const [startRoomId, setStartRoomId] = useState('');
+  const [joinRoomId, setJoinRoomId] = useState('');
 
-  const handleRoleChange = event => {
-    setRole(event.target.value);
+  const handleChoice = event => {
+    event.target.classList.add('hide');
+  };
+
+  const handleRoleChange = async event => {
+    const gameRef = await getGameRef(user, role);
+    setRole(event.target.dataset.role);
+    setGameRef(gameRef);
+    setUserGameRef(user, gameRef);
+    setStartRoomId(gameRef.id);
+    document.querySelector('.enter.start').classList.remove('hide');
+  };
+
+  const handleCopy = () => {
+    copyToClipboard('#roomId');
   };
 
   const handleRoomInputChange = event => {
@@ -36,7 +57,7 @@ export default function Lobby({
               setErrorFull(true);
             }
           }
-          setRoomId(roomId);
+          setJoinRoomId(roomId);
         });
     } catch {}
   };
@@ -47,47 +68,37 @@ export default function Lobby({
 
       <div className="container">
         <div className="start">
-          <button>Start a new game.</button>I will first be
-          <div className="option">
-            <input
-              checked={role === 'codemaker'}
-              onChange={handleRoleChange}
-              type="radio"
-              id="codemaker"
-              value="codemaker"
-              name="role"
-            />
-            <label htmlFor="codemaker">codemaker</label>
-          </div>
-          <div className="option">
-            <input
-              checked={role === 'codebreaker'}
-              onChange={handleRoleChange}
-              type="radio"
-              id="codebreaker"
-              value="codebreaker"
-              name="role"
-            />
-            <label htmlFor="codebreaker">codebreaker</label>
-          </div>
-          <p>
-            room ID: <span>23423</span>
-          </p>
-          <p> Copy this ID and send it to your friend to play with.</p>
-          <button
-            onClick={() =>
-              startGame(
-                user,
-                role,
-                setGameRef,
-                history,
-                setGameDoc,
-                setRoundRef
-              )
-            }>
-            Enter the room
+          <button onClick={handleChoice} className="choice">
+            Start a new game.
           </button>
+          {!role && (
+            <>
+              <button
+                className="option"
+                onClick={handleRoleChange}
+                data-role="codemaker">
+                I will first be a codemaker
+              </button>
+              <button
+                className="option"
+                onClick={handleRoleChange}
+                data-role="codebreaker">
+                I will first be a codebreaker
+              </button>
+            </>
+          )}
+          {role && (
+            <>
+              <div>
+                <input type="text" id="roomId" value={startRoomId} readOnly />
+                <button onClick={handleCopy}>
+                  Copy this ID and send it to your friend.
+                </button>
+              </div>
+            </>
+          )}
         </div>
+
         <div className="join">
           <span className={`error full ${errorFull && 'show'}`}>
             Error: Room is already full.
@@ -96,24 +107,34 @@ export default function Lobby({
             Error: Room id is invalid.
           </span>
           <p>
-            Join a game with ID:
+            <button onClick={handleChoice} className="choice">
+              Join the existing game.
+            </button>
             <input
               type="text"
-              value={roomId}
+              value={joinRoomId}
               onChange={handleRoomInputChange}
             />
           </p>
-          {!errorFull && !errorInvalid && roomId && (
-            <button
-              className="enter"
-              onClick={_event =>
-                joinGame(_event, roomId, user, setGameRef, setGameDoc, history)
-              }>
-              Enter the room
-            </button>
-          )}
         </div>
       </div>
+
+      <button
+        className="enter start hide"
+        onClick={() =>
+          startGame(gameRef, setGameRef, history, setGameDoc, setRoundRef)
+        }>
+        Enter the room (start)
+      </button>
+      {!errorFull && !errorInvalid && joinRoomId && (
+        <button
+          className="enter join"
+          onClick={_event =>
+            joinGame(_event, joinRoomId, user, setGameRef, setGameDoc, history)
+          }>
+          Enter the room(join)
+        </button>
+      )}
     </div>
   );
 }

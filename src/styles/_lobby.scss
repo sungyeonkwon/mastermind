@@ -13,27 +13,54 @@
 }
 
 .logo {
-  font-size: 120px;
+  font-size: 20px;
   font-weight: 300;
   width: 100%;
   text-align: center;
 }
 
+.choice {
+  background: green;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background: red;
+  }
+
+  &.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
 .start,
 .join {
+  position: relative;
   width: 50%;
-  padding: $padding-page;
-  border: 1px solid white;
+  height: 100%;
+  background: brown;
 }
 
 .start {
   .option {
-    border: 1px solid white;
     padding: 10px;
-  }
+    width: 100%;
+    height: 50%;
 
-  input {
-    display: inline-block;
+    &:hover {
+      background: blue;
+    }
+
+    &.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 }
 
@@ -46,9 +73,19 @@
       display: block;
     }
   }
+}
 
-  .enter {
-    border: 1px solid red;
-    padding: 10px;
+.enter {
+  border-radius: 50%;
+  height: 300px;
+  padding: 10px;
+  width: 300px;
+
+  &.start {
+    display: block;
+
+    &.hide {
+      display: none;
+    }
   }
 }

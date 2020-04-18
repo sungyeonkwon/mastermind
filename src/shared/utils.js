@@ -22,3 +22,9 @@ export function getRoomParam() {
 export function isCodebreaker(gameDoc, user) {
   return gameDoc.roundArr[gameDoc.currentRound].codebreaker.uid === user.uid;
 }
+
+export function copyToClipboard(inputSelector) {
+  var copyText = document.querySelector(inputSelector);
+  copyText.select();
+  document.execCommand('copy');
+}
