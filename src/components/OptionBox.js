@@ -66,7 +66,7 @@ export default function OptionBox({
                 <div
                   className="peg guess"
                   style={{
-                    backgroundColor: obj.value,
+                    background: `radial-gradient(white 0%, ${obj.value} 75%)`,
                     left: obj.x,
                     top: obj.y,
                   }}
@@ -89,13 +89,12 @@ export default function OptionBox({
                 <div
                   className="peg clue"
                   style={{
-                    backgroundColor: obj.value,
+                    background: `radial-gradient(white 0%, ${obj.value} 75%)`,
                     left: obj.x,
                     top: obj.y,
                   }}
                   draggable
                   key={index}
-                  color={obj.value}
                   data-type="clue"
                   data-value={obj.value}
                   onDrag={handleDrag}></div>

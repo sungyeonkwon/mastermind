@@ -126,7 +126,7 @@ function Spot({
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       className={spotType}
-      style={{backgroundColor: color}}
+      style={{background: `radial-gradient(white 0%, ${color} 75%)`}}
       data-column-index={columnIndex}
       data-row-index={rowIndex}></p>
   );
