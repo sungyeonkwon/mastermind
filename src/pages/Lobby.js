@@ -15,7 +15,6 @@ export default function Lobby({
   user,
   gameRef,
   setGameRef,
-  setGameDoc,
   setRoundRef,
   history,
 }) {
@@ -32,7 +31,7 @@ export default function Lobby({
   const handleRoleChange = async event => {
     setRole(event.target.dataset.role);
 
-    const gameRef = await getGameRef(user, role);
+    const gameRef = await getGameRef(user, event.target.dataset.role);
     setGameRef(gameRef);
     setUserGameRef(user, gameRef);
     setStartRoomId(gameRef.id);
@@ -122,16 +121,14 @@ export default function Lobby({
 
       <button
         className="enter start hide"
-        onClick={() =>
-          startGame(gameRef, setGameRef, history, setGameDoc, setRoundRef)
-        }>
+        onClick={() => startGame(gameRef, setGameRef, history, setRoundRef)}>
         Enter the room (start)
       </button>
       {!errorFull && !errorInvalid && joinRoomId && (
         <button
           className="enter join"
           onClick={_event =>
-            joinGame(_event, joinRoomId, user, setGameRef, setGameDoc, history)
+            joinGame(_event, joinRoomId, user, setGameRef, history)
           }>
           Enter the room(join)
         </button>

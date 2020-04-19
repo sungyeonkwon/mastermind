@@ -45,7 +45,6 @@ export function GameProvider({children}) {
         optionType,
         optionValue,
         optionEl,
-        setGameDoc,
         setGameRef,
         setOptionType,
         setOptionValue,
@@ -66,7 +65,6 @@ export function withGame(Component) {
         optionType,
         optionValue,
         optionEl,
-        setGameDoc,
         setGameRef,
         setOptionType,
         setOptionValue,
@@ -80,7 +78,6 @@ export function withGame(Component) {
           optionType={optionType}
           optionValue={optionValue}
           optionEl={optionEl}
-          setGameDoc={setGameDoc}
           setGameRef={setGameRef}
           setOptionType={setOptionType}
           setOptionValue={setOptionValue}

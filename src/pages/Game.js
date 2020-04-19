@@ -11,7 +11,7 @@ export default function Game({gameDoc}) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (gameDoc.chatContent) {
+    if (gameDoc && gameDoc.chatContent) {
       setTimeout(() => setLoading(false), MIN_LOADING_DELAY);
     }
   }, [gameDoc]);

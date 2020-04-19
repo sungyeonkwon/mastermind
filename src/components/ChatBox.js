@@ -43,7 +43,7 @@ export default function ChatBox({user, gameRef, gameDoc}) {
           gameDoc.chatContent &&
           gameDoc.chatContent.length &&
           gameDoc.chatContent.map(({user, message, isNarration}, index) => (
-            <p key={index} className={isNarration && 'narration'}>
+            <p key={index} className={isNarration ? 'narration' : ''}>
               <span>{!isNarration && ' ↳ ' + user.displayName + ' '} </span>
               {message}
             </p>

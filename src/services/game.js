@@ -1,9 +1,7 @@
 import {GameConfig} from '../shared/config';
 import {Narration, Color} from '../shared/constants';
 import {firestore} from './firebase';
-import {setRoomParam} from '../shared/utils';
-
-const CODE_PROMPT_DELAY = 5000;
+import {setRoomParam, getRoundDoc} from '../shared/utils';
 
 export async function updateGame(
   gameRef,
@@ -14,7 +12,7 @@ export async function updateGame(
   spotType
 ) {
   const gameData = await (await gameRef.get()).data();
-  const roundData = gameData.roundArr[gameData.currentRound];
+  const roundData = getRoundDoc(gameData);
   const newRowArr = [...roundData.rowArr];
   const newCodeArr = [...roundData.codeArr];
 
@@ -33,14 +31,7 @@ export async function updateGame(
   });
 }
 
-export async function joinGame(
-  _event,
-  joinRoomId,
-  user,
-  setGameRef,
-  setGameDoc,
-  history
-) {
+export async function joinGame(_event, joinRoomId, user, setGameRef, history) {
   // TODO: Ensure the user is not the same as player one.
   if (!user) return;
 
@@ -48,7 +39,9 @@ export async function joinGame(
   const gameDoc = await gameRef.get();
   const gameData = gameDoc.data();
 
+  // TODO: Config for multiple rounds.
   const roundOne = {...gameData.roundArr[0]};
+  console.log('roundOne', roundOne);
   const roundOneUpdated = {
     ...roundOne,
     codemaker: roundOne.codemaker ? roundOne.codemaker : user,
@@ -72,7 +65,7 @@ export async function joinGame(
   setGameRef(gameRef);
 }
 
-export async function startGame(gameRef, setGameRef, history, setGameDoc) {
+export async function startGame(gameRef, setGameRef, history) {
   // Push room query string to url.
   const url = setRoomParam({room: gameRef.id});
   gameRef.id && url && history.push(`game?${url}`);

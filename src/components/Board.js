@@ -3,14 +3,14 @@ import React from 'react';
 import {GameConfig} from '../shared/config';
 import {withGame} from '../providers/GameProvider';
 import {withUser} from '../providers/UserProvider';
-import {isCodebreaker} from '../shared/utils';
+import {isCodebreaker, getRoundDoc} from '../shared/utils';
 import {updateGame} from '../services/game';
 
 export default function Board({gameDoc, user}) {
   let round, codebreaker, codeArr;
 
   try {
-    round = gameDoc.roundArr[gameDoc.currentRound];
+    round = getRoundDoc(gameDoc);
     codeArr = round.codeArr;
     codebreaker = isCodebreaker(gameDoc, user);
   } catch (error) {}
@@ -32,7 +32,7 @@ function Row({rowIndex, user, round, gameDoc}) {
   let guessArr, clueArr, index;
 
   try {
-    round = gameDoc.roundArr[gameDoc.currentRound];
+    round = getRoundDoc(gameDoc);
     guessArr = round.rowArr[rowIndex].guessArr;
     clueArr = round.rowArr[rowIndex].clueArr;
     index = isCodebreaker(gameDoc, user)

@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import 'normalize.css';
 import './styles/main.scss';
 
-import Header from './components/Header';
+import {HeaderWithGame} from './components/Header';
 import ScreenAlert from './components/ScreenAlert';
 import {GameProvider} from './providers/GameProvider';
 import {Routes} from './routes/routes';
@@ -15,7 +15,7 @@ function App() {
       <ScreenAlert />
       <UserProvider>
         <GameProvider>
-          <Header />
+          <HeaderWithGame />
           <Router>
             <Switch>
               {Routes.map(({path, exact, component: Component, ...rest}) => (
