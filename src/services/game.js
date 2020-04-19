@@ -3,7 +3,7 @@ import {Narration, Color} from '../shared/constants';
 import {firestore} from './firebase';
 import {setRoomParam, getRoundDoc} from '../shared/utils';
 
-export async function updateGame(
+export async function placePeg(
   gameRef,
   type,
   value,
@@ -41,7 +41,6 @@ export async function joinGame(_event, joinRoomId, user, setGameRef, history) {
 
   // TODO: Config for multiple rounds.
   const roundOne = {...gameData.roundArr[0]};
-  console.log('roundOne', roundOne);
   const roundOneUpdated = {
     ...roundOne,
     codemaker: roundOne.codemaker ? roundOne.codemaker : user,
@@ -93,11 +92,21 @@ export async function getGameRef(user, role) {
     clueArr: Array.from(
       {length: GameConfig.guessSpotCount},
       v => Color.GREY_200
-    ),
+    ).map(v => {
+      return {
+        color: v,
+        type: 'clue',
+      };
+    }),
     guessArr: Array.from(
       {length: GameConfig.guessSpotCount},
       v => Color.GREY_200
-    ),
+    ).map(v => {
+      return {
+        color: v,
+        type: 'guess',
+      };
+    }),
   });
 
   // Create a round document for the first game.
