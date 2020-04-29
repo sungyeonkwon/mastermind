@@ -69,6 +69,8 @@
     }
 
     .peg {
+      // Removes the effect of element being react when dragged.
+      transform: translate(0, 0);
       display: inline-block;
       border-radius: 50%;
       position: absolute;
@@ -78,6 +80,10 @@
 
       &:hover {
         box-shadow: 0px 0px 10px black;
+      }
+
+      &:active {
+        box-shadow: none;
       }
 
       .guess & {
