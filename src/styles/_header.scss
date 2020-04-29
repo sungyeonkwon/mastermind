@@ -14,14 +14,19 @@ header {
 
 .current-user {
   align-items: center;
-  background: green;
   color: white;
   display: flex;
   height: 30px;
   justify-content: center;
   height: 100%;
 
+  p {
+    padding: 0 15px;
+  }
+
   button {
+    padding: 0 15px;
+    cursor: pointer;
     background: black;
     color: white;
     height: 100%;

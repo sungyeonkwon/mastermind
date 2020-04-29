@@ -69,6 +69,7 @@
     }
 
     .peg {
+      cursor: pointer;
       // Removes the effect of element being react when dragged.
       transform: translate(0, 0);
       display: inline-block;

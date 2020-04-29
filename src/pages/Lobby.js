@@ -111,6 +111,7 @@ export default function Lobby({
               Join the existing game.
             </button>
             <input
+              placeholder="Paste in the ID"
               type="text"
               value={joinRoomId}
               onChange={handleRoomInputChange}

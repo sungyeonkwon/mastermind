@@ -9,6 +9,21 @@
 
   .container {
     display: flex;
+    height: 100%;
+  }
+
+  button {
+    font-size: 32px;
+  }
+
+  input {
+    top: 0;
+    left: 0;
+    position: absolute;
+    margin: 20px;
+    width: calc(100% - 40px);
+    font-size: 32px;
+    text-align: center;
   }
 }
 
@@ -20,6 +35,7 @@
 }
 
 .choice {
+  cursor: pointer;
   background: green;
   position: absolute;
   left: 0;
@@ -47,7 +63,24 @@
 }
 
 .start {
+  > div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  button {
+    height: 100%;
+    cursor: pointer;
+
+    &:hover {
+      background: blue;
+    }
+  }
+
   .option {
+    cursor: pointer;
     padding: 10px;
     width: 100%;
     height: 50%;
@@ -75,10 +108,14 @@
 }
 
 .enter {
-  border-radius: 50%;
-  height: 300px;
+  height: 500px;
   padding: 10px;
-  width: 300px;
+  width: 100%;
+  cursor: pointer;
+
+  &:hover {
+    background: blue;
+  }
 
   &.start {
     display: block;
