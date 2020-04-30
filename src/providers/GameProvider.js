@@ -1,7 +1,7 @@
 import React, {createContext, useEffect, useState, useContext} from 'react';
 
 import {firestore} from '../services/firebase';
-import {getDisplayName, getRoomParam, getRoundDoc} from '../shared/utils';
+import {getDisplayName, getRoomParam} from '../shared/utils';
 import {UserContext} from './UserProvider';
 
 export const GameContext = createContext();
