@@ -8,13 +8,17 @@ import ScreenAlert from './components/ScreenAlert';
 import {GameProvider} from './providers/GameProvider';
 import {Routes} from './routes/routes';
 import {UserProvider} from './providers/UserProvider';
+import Narrator from './services/narrator';
+
+// Create a narrator instance.
+const narrator = new Narrator();
 
 function App() {
   return (
     <div>
       <ScreenAlert />
       <UserProvider>
-        <GameProvider>
+        <GameProvider narrator={narrator}>
           <HeaderWithGame />
           <Router>
             <Switch>

@@ -2,52 +2,89 @@ import React, {useState, useEffect} from 'react';
 
 import {withUser} from '../providers/UserProvider';
 import {withGame} from '../providers/GameProvider';
+import {NarrationType} from '../services/narrator';
+import {getRoundDoc} from '../shared/utils';
 
-export default function ChatBox({user, gameRef, gameDoc}) {
+export default function ChatBox({user, gameRef, gameDoc, narrator}) {
   const [value, setValue] = useState('');
   const [chatContent, setChatContent] = useState('');
 
   useEffect(() => {
     if (gameDoc) {
+      // Update narrator member variables.
+      const currRound = getRoundDoc(gameDoc);
+      if (currRound.codemaker && !narrator.codemaker) {
+        narrator.codemaker = currRound.codemaker.displayName;
+      }
+      if (currRound.codebreaker && !narrator.codebreaker) {
+        narrator.codebreaker = currRound.codemaker.displayName;
+      }
+
       setChatContent(gameDoc.chatContent);
     }
-  }, [gameDoc]);
+  }, [gameDoc, narrator.codemaker, narrator.codebreaker]);
 
   const handleChange = event => {
     setValue(event.target.value);
   };
 
   const handleKeyDown = event => {
-    if (event.key === 'Enter') {
-      const line = {
-        isNarration: false,
-        message: value,
-        timestamp: new Date(),
-        user: user,
-      };
-      if (gameRef) {
-        gameRef
-          .update({chatContent: [...chatContent, line]})
-          .then(() => setValue(''));
-      }
+    // Only take action when enter key is pressed.
+    if (!(event.key === 'Enter')) return;
 
-      // Scroll to bottom.
-      document.querySelector('.spacer').scrollIntoView();
+    const message =
+      value === 'rules' ? narrator.getMessage(NarrationType.rules) : value;
+    const isNarration = value === 'rules';
+
+    const line = {
+      isNarration,
+      message,
+      timestamp: new Date(),
+      user: user,
+    };
+    if (gameRef) {
+      gameRef
+        .update({chatContent: [...chatContent, line]})
+        .then(() => setValue(''));
     }
+
+    // Scroll to bottom.
+    document.querySelector('.spacer').scrollIntoView();
+  };
+
+  const isChatLoaded =
+    gameDoc && gameDoc.chatContent && gameDoc.chatContent.length;
+
+  const getUserMessage = (message, name) => {
+    const formatedMessage = `<span>↳ ${name} </span> ${message}`;
+    return {
+      __html: formatedMessage,
+    };
   };
 
   return (
     <div>
       <div className="chat-box">
-        {gameDoc &&
-          gameDoc.chatContent &&
-          gameDoc.chatContent.length &&
-          gameDoc.chatContent.map(({user, message, isNarration}, index) => (
-            <p key={index} className={isNarration ? 'narration' : ''}>
-              <span>{!isNarration && ' ↳ ' + user.displayName + ' '} </span>
-              {message}
-            </p>
-          ))}
+        {isChatLoaded &&
+          gameDoc.chatContent.map(({user, message, isNarration}, index) => {
+            if (isNarration) {
+              return (
+                <p
+                  key={index}
+                  className="narration"
+                  dangerouslySetInnerHTML={{__html: message}}></p>
+              );
+            } else {
+              return (
+                <p
+                  key={index}
+                  dangerouslySetInnerHTML={getUserMessage(
+                    message,
+                    user.displayName
+                  )}></p>
+              );
+            }
+          })}
         <div className="spacer"></div>
       </div>
       <input
