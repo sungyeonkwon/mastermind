@@ -1,7 +1,8 @@
 import {GameConfig} from '../shared/config';
-import {Narration, Color} from '../shared/constants';
+import {Color} from '../shared/constants';
 import {firestore} from './firebase';
 import {setRoomParam, getRoundDoc} from '../shared/utils';
+import {NarrationMessage} from './narrator';
 
 export async function placePeg(
   gameRef,
@@ -130,7 +131,7 @@ export async function getGameRef(user, role) {
     chatContent: [
       {
         isNarration: true,
-        message: Narration.start,
+        message: NarrationMessage.start,
         timeStamp: new Date(),
       },
     ],
