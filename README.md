@@ -1,3 +1,5 @@
+## That antique Mastermind game, but on screen.
+
 * TODO
 
 - [ ] Make game playable without google account
