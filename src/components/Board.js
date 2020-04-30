@@ -4,7 +4,7 @@ import {withGame} from '../providers/GameProvider';
 import {withUser} from '../providers/UserProvider';
 import {isCodebreaker, getRoundDoc} from '../shared/utils';
 import {RowWithGame} from './Row';
-import Code from './Code';
+import {CodeWithGame} from './Code';
 
 export default function Board({gameDoc, user}) {
   let round, codebreaker, codeArr;
@@ -23,7 +23,7 @@ export default function Board({gameDoc, user}) {
             <RowWithGame key={rowIndex} rowIndex={rowIndex} />
           ))}
       </div>
-      <Code codeArr={codeArr} />
+      <CodeWithGame codeArr={codeArr} />
     </div>
   );
 }

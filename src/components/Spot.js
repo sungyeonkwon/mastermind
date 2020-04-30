@@ -4,17 +4,18 @@ import {withGame} from '../providers/GameProvider';
 import {placePeg} from '../services/game';
 
 export function Spot({
-  columnIndex,
-  rowIndex,
   color,
-  spotType,
+  columnIndex,
   gameRef,
+  optionEl,
   optionType,
   optionValue,
-  optionEl,
+  rowIndex,
+  setOptionEl,
   setOptionType,
   setOptionValue,
-  setOptionEl,
+  spotType,
+  shouldHide,
 }) {
   const handleDragOver = event => {
     event.preventDefault();
@@ -53,6 +54,10 @@ export function Spot({
   const handleDragLeave = event => {
     event.target.style.transform = 'scale(1)';
   };
+
+  if (shouldHide) {
+    return <p className={spotType + ' hide'}>?</p>;
+  }
 
   // TODO: Make area draggable only if there's a peg.
   return (
