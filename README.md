@@ -12,3 +12,5 @@
 - [ ] End of round (loading screen)
 - [ ] End of game redirection popup
 - [ ] Sound effect with howler
+
+- [ ] Make an AI agent
